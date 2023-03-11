@@ -1,11 +1,12 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useContext } from 'react';
 
+import { AppContext, AppContextProvider } from './AppContext';
 import './App.css';
-import { EmptyShoppingList } from './components/EmptyShoppingList';
+
 import { LoadingScreen } from './components/LoadingScreen';
+import { ShoppingList } from './components/ShoppingList/ShoppingList';
 
 function App() {
-  const [items, setItems] = useState([])
   const [loading, setLoading] = useState(false)
   
   const fakeLoad = () => {
@@ -13,14 +14,14 @@ function App() {
     
     console.log('Loading...')
     setLoading(true)
-    setInterval(() => {
+      setInterval(() => {
       console.log('Loaded!')
       setLoading(false)
     }, 3000)
 
   }
 
-  
+
 
 
   return (
@@ -28,15 +29,18 @@ function App() {
       <header className="App-header">
         SHOPPING LIST
       </header>
-      {loading ? <LoadingScreen/> : (
-        <>
-
-      { items?.length ? 'Look at you fancy pants' : <EmptyShoppingList items={items}  setItems={setItems} />}
-      <button onClick={fakeLoad}>Load</button>
-      </>)
-      }
+      {loading && <LoadingScreen/> }
+      <ShoppingList />
     </div>
   );
 }
 
-export default App;
+function AppWithProvider() {
+  return (
+    <AppContextProvider>
+      <App />
+    </AppContextProvider>
+  )
+}
+
+export default AppWithProvider;

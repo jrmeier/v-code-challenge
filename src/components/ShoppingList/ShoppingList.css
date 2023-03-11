@@ -1,0 +1,48 @@
+.shoppingListUl {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  border: 1px solid #ccc;
+  width: 80%;
+}
+
+.shoppingListItem {
+  display: inline-flex;
+
+  padding: 10px;
+  box-sizing: border-box; /* include padding and border in width calculations */
+  text-align: center;
+  border: 1px solid #ccc;
+
+  color: #7d7a7a;
+  margin: 10px;
+  text-decoration: none;
+  list-style-type: none;
+  font-size: 14px;
+  line-height: 20px;
+  text-align: left;
+}
+
+.shoppingListItemName {
+  font-size: 18px;
+  line-height: 23px;
+  font-family: Nunito 18px SemiBold;
+  margin: 0;
+  padding: 0;
+}
+
+.shoppingListItem:hover {
+  background-color: #ccc;
+}
+
+.shoppingListItemCheckbox {
+  width: 20px;
+  height: 20px;
+  border: 1px solid #ccc;
+  border-radius: 50%;
+  background-color: #fff;
+  vertical-align: middle;
+  margin-right: 10px;
+}
