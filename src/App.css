@@ -2,37 +2,67 @@
   text-align: center;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
-}
-
 .App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
+  background-color: #4d81b7;
+  height: 64px;
   color: white;
+  text-align: left;
+  font: 28px sans-serif;
+  padding: 10px;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  font-family: "Dosis", sans-serif;
 }
-
+/* blue bar 2.5rem, header font 1rem, body font 1rem, button font 0.85rem */
 .App-link {
   color: #61dafb;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.shopping-list-container {
+  background-color: white;
+  margin-top: 10%;
+  font-family: "Nunito", sans-serif;
+  display: block;
+  width: 40%;
+  margin: auto;
+  min-height: 10vh;
+  border: 1px solid #c6c6c6;
+  border-radius: 5px;
+}
+
+.shopping-list-empty {
+  background-color: white;
+  color: #87898c;
+  font-family: "Nunito", sans-serif;
+  font-family: "Nunito", sans-serif;
+  display: block;
+  width: 40%;
+  margin: auto;
+  min-height: 10vh;
+  border: 1px solid #c6c6c6;
+  border-radius: 5px;
+  margin-top: 10%;
+}
+
+.add-first-item-button {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  padding: 8px 15px;
+  gap: 10px;
+
+  width: 151px;
+  height: 36px;
+  left: 564px;
+  top: 301px;
+
+  /* Blue 3 (Button Default) */
+
+  background: #1871e8;
+  border-radius: 4px;
+
+  color: white;
+  margin: 10px auto;
 }

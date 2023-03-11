@@ -1,23 +1,33 @@
-import logo from './logo.svg';
+import { useEffect, useState } from 'react';
+
 import './App.css';
+import { EmptyShoppingList } from './components/EmptyShoppingList';
 
 function App() {
+  const [items, setItems] = useState([])
+  
+  useEffect(() => {
+    console.log('App mounted');
+
+    return () => {
+      console.log('App unmounted');
+    }
+  });
+
+
   return (
     <div className="App">
       <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
+        SHOPPING LIST
       </header>
+
+      { items?.length ? 'Look at you fancy pants' : <EmptyShoppingList items={items}  setItems={setItems} />}
+
+          {/* {
+            items.length > 0 && <div className='shopping-list'>
+              <ul>{items.map((item, index) => <li key={index}>{item}</li>)}</ul>
+              </div>
+          } */}
     </div>
   );
 }
