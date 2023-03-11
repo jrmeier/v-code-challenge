@@ -2,17 +2,25 @@ import { useEffect, useState } from 'react';
 
 import './App.css';
 import { EmptyShoppingList } from './components/EmptyShoppingList';
+import { LoadingScreen } from './components/LoadingScreen';
 
 function App() {
   const [items, setItems] = useState([])
+  const [loading, setLoading] = useState(false)
   
-  useEffect(() => {
-    console.log('App mounted');
+  const fakeLoad = () => {
 
-    return () => {
-      console.log('App unmounted');
-    }
-  });
+    
+    console.log('Loading...')
+    setLoading(true)
+    setInterval(() => {
+      console.log('Loaded!')
+      setLoading(false)
+    }, 3000)
+
+  }
+
+  
 
 
   return (
@@ -20,14 +28,13 @@ function App() {
       <header className="App-header">
         SHOPPING LIST
       </header>
+      {loading ? <LoadingScreen/> : (
+        <>
 
       { items?.length ? 'Look at you fancy pants' : <EmptyShoppingList items={items}  setItems={setItems} />}
-
-          {/* {
-            items.length > 0 && <div className='shopping-list'>
-              <ul>{items.map((item, index) => <li key={index}>{item}</li>)}</ul>
-              </div>
-          } */}
+      <button onClick={fakeLoad}>Load</button>
+      </>)
+      }
     </div>
   );
 }

@@ -3,7 +3,7 @@ import { Modal } from './Modal/Modal';
 import { AddItemForm } from './AddItemForm/AddItemForm';
 
 export function EmptyShoppingList ({items, setItems}) {
-    const [showAddItemModal, setShowAddItemModal] = useState(true);
+    const [showAddItemModal, setShowAddItemModal] = useState(false);
     return (<>
     <div className='shopping-list-empty'> 
         Your shopping list is empty. { ':(' }
