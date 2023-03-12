@@ -48,6 +48,9 @@
   vertical-align: middle;
   margin-right: 10px;
 }
+.checked {
+  text-decoration: line-through;
+}
 
 .shoppingList {
   display: flex;

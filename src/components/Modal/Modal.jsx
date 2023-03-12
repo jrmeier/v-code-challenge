@@ -3,7 +3,7 @@ import React, { useEffect} from 'react';
 import "./Modal.css"
     
 
-export function Modal({setShowModal, component, action}) {
+export function Modal({setShowModal, component, actionButtonAction, actionButtonLabel}) {
 
   useEffect(() => {
     document.querySelector('.modal').classList.add('show');
@@ -17,14 +17,21 @@ export function Modal({setShowModal, component, action}) {
     }
   }
 
+  const handleActionButtonClick = () => {
+    actionButtonAction();
+    setShowModal(false);
+  }
+
   return (
     <>
     <div className="modal-overlay" onClick={handleOverlayClick}>
         <div className="modal">
-        {component}
+          {component}
 
-        <div className="modal-close-button" onClick={() => setShowModal(false)}>Cancel</div>
-        <div className='modal-action-button'>Action button</div>
+          <div className="modal-buttons">
+            <div className="modal-button" onClick={() => setShowModal(false)}>Cancel</div>
+            <div className='modal-button' onClick={handleActionButtonClick}>{actionButtonLabel}</div>
+          </div>
         </div>
     </div>
     </>

@@ -8,14 +8,54 @@ import './ShoppingList.css'
 
 export function ShoppingList() {
 
-    const { items } = useContext(AppContext);
+    const { items, setItems } = useContext(AppContext);
     const [showAddItemModal, setShowAddItemModal] = useState(false);
     const [editIndex, setEditIndex] = useState(null);
 
-    const handleEditItem = (itemIndex) => {
-        console.log('edit item: ',itemIndex)
-        setEditIndex(itemIndex)
-        setShowAddItemModal(!showAddItemModal)
+    // const handleEditItem = (itemIndex) => {
+    //     console.log('edit item: ',itemIndex)
+    //     setEditIndex(itemIndex)
+    //     setShowAddItemModal(!showAddItemModal)
+    // }
+
+    const handleAddItem = (e) => {
+        // e.preventDefault();
+        console.log("handleAddItem: ", e)
+        // const newItem = {
+        //     name: itemName,
+        //     description: itemDescription,
+        //     quantity: itemQuantity
+        // }
+
+        // setItems([...items, newItem])
+        setShowAddItemModal(false)
+    }
+
+    const handleEditItem = (e) => {
+        console.log("editItem: ", e)
+        // const newItem = {
+        //     name: itemName,
+        //     description: itemDescription,
+        //     quantity: itemQuantity
+        // }
+
+        // const newItems = [...items];
+        // newItems[editIndex] = newItem;
+
+        // setItems(newItems);
+        setShowAddItemModal(false);
+    }
+
+
+    const handleCheckboxClick = (itemIndex) => {
+        console.log('checkbox clicked: ', itemIndex)
+        const newItem = items[itemIndex];
+        newItem.checked = !newItem.checked;
+        items.pop(itemIndex);
+        const newItems = [...items, newItem];
+
+        setItems(newItems);
+        //
     }
 
     return (
@@ -32,10 +72,10 @@ export function ShoppingList() {
                         return (
                             <li className="shoppingListItem" key={i}>
                                 <div className="shoppingListItemContent">
-                                    <input type="checkbox" className="shoppingListItemCheckbox" />
+                                    <input type="checkbox" className="shoppingListItemCheckbox" onChange={() =>handleCheckboxClick(i)} />
                                     <div className="shoppingListNameAndDescription">
-                                        <div className="shoppingListItemName">{item.name}</div>
-                                        <div className="shoppingListItemDescription">{item.description}</div>
+                                        <div className={`shoppingListItemName ${item?.checked ? 'checked' : ''}`} >{item.name}</div>
+                                        <div className={`shoppingListItemDescription ${item?.checked ? 'checked' : ''}`}>{item.description}</div>
                                     </div>
                                 </div>
                                 <div>
@@ -48,11 +88,18 @@ export function ShoppingList() {
                 }
             </ul>
             {
-                showAddItemModal && <Modal setShowModal={setShowAddItemModal} component={
-                <AddItemForm
-                    setShowAddItemModal={setShowAddItemModal} 
-                    editIndex={editIndex}
-                />} />
+                showAddItemModal && <Modal 
+                actionButtonLabel={editIndex === null ? 'Add Item' : 'Save Item'}
+                actionButtonAction={editIndex === null ? handleAddItem : handleEditItem}
+                setShowModal={setShowAddItemModal} component={
+                    <AddItemForm
+                        setShowAddItemModal={setShowAddItemModal} 
+                        editIndex={editIndex}
+                        setEditIndex={setEditIndex}
+                        submitAction={handleAddItem}
+                        // actionButton={}
+                    />} 
+                />
             }
         </div>
         ) : <EmptyShoppingList setShowAddItemModal={setShowAddItemModal} />

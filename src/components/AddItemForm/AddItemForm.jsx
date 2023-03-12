@@ -3,7 +3,7 @@ import { useContext, useEffect, useState } from 'react';
 import './AddItemForm.css';
 import { AppContext } from '../../AppContext';
 
-export function AddItemForm({ setShowAddItemModal, editIndex }){
+export function AddItemForm({ setShowAddItemModal, editIndex, setEditIndex, submitAction }){
     const appContext = useContext(AppContext);
     const { items, setItems } = appContext;
     const [itemName, setItemName] = useState('');
@@ -11,42 +11,20 @@ export function AddItemForm({ setShowAddItemModal, editIndex }){
     const [itemQuantity, setItemQuantity] = useState(1);
 
     useEffect(() => {
-        console.log({ editIndex, items })
+        // clear the form when the modal is closed
         if (editIndex !== null) {
             const item = items[editIndex];
             setItemName(item.name);
             setItemDescription(item.description);
             setItemQuantity(item.quantity);
         }
-    }, [editIndex, items])
+        
+        return () => {
+            setEditIndex(null);
+        }
+    }, [editIndex, items,setEditIndex])
     
 
-    const addItem = (e) => {
-        e.preventDefault();
-        const newItem = {
-            name: itemName,
-            description: itemDescription,
-            quantity: itemQuantity
-        }
-
-        setItems([...items, newItem])
-        setShowAddItemModal(false)
-    }
-
-    const editItem = (e) => {
-        e.preventDefault();
-        const newItem = {
-            name: itemName,
-            description: itemDescription,
-            quantity: itemQuantity
-        }
-
-        const newItems = [...items];
-        newItems[editIndex] = newItem;
-
-        setItems(newItems);
-        setShowAddItemModal(false);
-    }
 
     return (
         <div className='add-item'>
@@ -54,7 +32,7 @@ export function AddItemForm({ setShowAddItemModal, editIndex }){
         <div style={{ fontSize: '18px', lineHeight: '24px' }}> Add an Item</div>
         <div style={{ fontSize: '14px'}}>Add your new item below</div>
         <div className="add-item-form">
-            <form onSubmit={addItem}>
+            <form onSubmit={submitAction}>
                 <input type="text" value={itemName} onChange={(e)=>setItemName(e.target.value)}placeholder="Item Name" />
                 <input type="text" value={itemDescription} onChange={(e) => setItemDescription(e.target.value)} placeholder="Description" />
                 <select name="itemQuantity" placeholder='How many?' className='itemQuantitySelect'>

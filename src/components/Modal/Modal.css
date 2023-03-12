@@ -22,6 +22,7 @@
   position: fixed;
   right: -100%; /* initially position the modal outside the viewport */
   /* transition: left 0.3s ease-in-out; */
+  display: flex;
 }
 
 .modal.show {
@@ -31,12 +32,23 @@
   transition: left 1s ease-in-out;
 }
 
-/* Modal close button */
-.modal button {
-  margin-top: 10px;
+/* Modal button container */
+.modal-buttons {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  display: flex;
+  justify-content: right;
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+/* Modal button */
+.modal-button {
   padding: 10px 15px;
-  background-color: #ddd;
+  background-color: #ccc;
   border: none;
   border-radius: 5px;
   cursor: pointer;
+  margin-right: 10px;
 }
