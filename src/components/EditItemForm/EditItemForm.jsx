@@ -1,7 +1,7 @@
 
 import './AddItemForm.css';
 
-export function AddItemForm(){
+export function EditItemForm(){
     return (
         <div className='add-item'>
         <div className='add-item-form-header'>SHOPPING LIST</div>

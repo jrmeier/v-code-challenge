@@ -1,15 +1,25 @@
 
-import { useContext, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import './AddItemForm.css';
 import { AppContext } from '../../AppContext';
 
-export function AddItemForm({ setShowAddItemModal }){
+export function AddItemForm({ setShowAddItemModal, editIndex }){
     const appContext = useContext(AppContext);
     const { items, setItems } = appContext;
-
     const [itemName, setItemName] = useState('');
     const [itemDescription, setItemDescription] = useState('');
     const [itemQuantity, setItemQuantity] = useState(1);
+
+    useEffect(() => {
+        console.log({ editIndex, items })
+        if (editIndex !== null) {
+            const item = items[editIndex];
+            setItemName(item.name);
+            setItemDescription(item.description);
+            setItemQuantity(item.quantity);
+        }
+    }, [editIndex, items])
+    
 
     const addItem = (e) => {
         e.preventDefault();
@@ -21,6 +31,21 @@ export function AddItemForm({ setShowAddItemModal }){
 
         setItems([...items, newItem])
         setShowAddItemModal(false)
+    }
+
+    const editItem = (e) => {
+        e.preventDefault();
+        const newItem = {
+            name: itemName,
+            description: itemDescription,
+            quantity: itemQuantity
+        }
+
+        const newItems = [...items];
+        newItems[editIndex] = newItem;
+
+        setItems(newItems);
+        setShowAddItemModal(false);
     }
 
     return (
@@ -38,9 +63,9 @@ export function AddItemForm({ setShowAddItemModal }){
                         
                         </option>)}
                 </select>
-
-
-                <button type="submit" onClick={addItem}>Add Item</button>
+                <input type="checkbox" className="shoppingListItemCheckbox" /> Purchased
+                <br />
+                {/* <button type="submit" onClick={addItem}>Add Item</button> */}
             </form>
         </div>
         </div>

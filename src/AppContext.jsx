@@ -3,7 +3,7 @@ import { useState, createContext } from 'react';
 
 const defaultAppContext = {
     items: [{
-        name: 'apples',
+        name: 'Tomatoes',
         description: 'red apples',
     }],
     setItems: Function

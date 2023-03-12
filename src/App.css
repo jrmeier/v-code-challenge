@@ -1,5 +1,6 @@
 .App {
   text-align: center;
+  width: 100%;
 }
 
 .App-header {
@@ -18,7 +19,7 @@
 .App-link {
   color: #61dafb;
 }
-
+/* 
 .shopping-list-container {
   background-color: white;
   margin-top: 10%;
@@ -60,9 +61,9 @@
 
   /* Blue 3 (Button Default) */
 
-  background: #1871e8;
+/* background: #1871e8;
   border-radius: 4px;
 
   color: white;
   margin: 10px auto;
-}
+}  */
