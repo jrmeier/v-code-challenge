@@ -3,6 +3,7 @@ import { AppContext } from "../../AppContext"
 import { Modal } from "../Modal/Modal"
 import { AddItemForm } from "../AddItemForm/AddItemForm"
 import { EmptyShoppingList } from './EmptyShoppingList'
+import { DeleteItemForm } from '../DeleteItemForm/DeleteItemForm'
 
 import './ShoppingList.css'
 
@@ -10,21 +11,22 @@ export function ShoppingList() {
 
     const { items, setItems, addItem } = useContext(AppContext);
     const [showAddItemModal, setShowAddItemModal] = useState(false);
+    const [showDeleteModal, setShowDeleteModal] = useState(false);
     const [editIndex, setEditIndex] = useState(null);
 
+    const [newItem, setNewItem] = useState(null)
+
     const handleEditItem = (itemIndex) => {
-        console.log('edit item: ',itemIndex)
         setEditIndex(itemIndex)
         setShowAddItemModal(!showAddItemModal)
     }
     
-    const handleAddItem = (itemIndex) => {
-        console.log('edit item: ',itemIndex)
-        setEditIndex(itemIndex)
+    const handleAddItem = () => {
+        console.log('add item')
+        addItem(newItem)
         setShowAddItemModal(!showAddItemModal)
     }
    
-
 
     const handleCheckboxClick = (itemIndex) => {
         const newItem = items[itemIndex];
@@ -42,6 +44,20 @@ export function ShoppingList() {
         newItems.pop(itemIndex);
         setItems(newItems);
     }
+
+    // const showDeleteModal = (itemIndex) => {
+    //     console.log('show delete modal: ', itemIndex)
+    // }
+
+    const handleEditItemSubmit = () => {
+        console.log('edit item')
+        const newItems = [...items];
+        newItems[editIndex] = newItem;
+        setEditIndex(null);
+        setItems(newItems);
+        setShowAddItemModal(!showAddItemModal)
+    }
+
 
     return (
         <>
@@ -76,17 +92,31 @@ export function ShoppingList() {
             {
                 showAddItemModal && <Modal 
                 actionButtonLabel={editIndex === null ? 'Add Item' : 'Save Item'}
-                actionButtonAction={editIndex === null ? handleAddItem : handleEditItem}
-                setShowModal={setShowAddItemModal} component={
+                actionButtonAction={editIndex === null ? handleAddItem : handleEditItemSubmit}
+                setShowModal={setShowAddItemModal}
+                component={
                     <AddItemForm
                         setShowAddItemModal={setShowAddItemModal} 
                         editIndex={editIndex}
                         setEditIndex={setEditIndex}
-                        submitAction={handleAddItem}
+                        setNewItem={setNewItem}
                         // actionButton={}
                     />} 
+                    submitAction={editIndex === null ? handleAddItem : handleEditItemSubmit}
                 />
             }
+
+            {
+                showDeleteModal && <Modal
+                actionButtonLabel='Delete Item'
+                actionButtonAction={handleDeleteItem}
+                setShowModal={setShowDeleteModal}
+                component={
+                    <DeleteItemForm />
+                }
+                />
+            }
+
         </div>
         ) : <EmptyShoppingList setShowAddItemModal={setShowAddItemModal} />
     }
