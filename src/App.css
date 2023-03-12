@@ -45,25 +45,21 @@
   border-radius: 5px;
   margin-top: 10%;
 }
-
-.add-first-item-button {
+*/
+.action-button {
   display: flex;
   flex-direction: row;
   justify-content: center;
-  align-items: center;
-  padding: 8px 15px;
-  gap: 10px;
+  /* padding: 8px 15px; */
+  /* gap: 10px; */
 
-  width: 151px;
+  /* width: 151px; */
   height: 36px;
-  left: 564px;
-  top: 301px;
-
   /* Blue 3 (Button Default) */
 
-/* background: #1871e8;
+  background: #1871e8;
   border-radius: 4px;
 
   color: white;
   margin: 10px auto;
-}  */
+}

@@ -10,17 +10,19 @@ export function AddItemForm({ setShowAddItemModal, editIndex, setEditIndex, subm
     const [itemDescription, setItemDescription] = useState('');
     const [itemQuantity, setItemQuantity] = useState(1);
 
+
+
     useEffect(() => {
         // clear the form when the modal is closed
         if (editIndex !== null) {
             const item = items[editIndex];
-            setItemName(item.name);
-            setItemDescription(item.description);
-            setItemQuantity(item.quantity);
+            setItemName(item?.name);
+            setItemDescription(item?.description);
+            setItemQuantity(item?.quantity);
         }
         
         return () => {
-            setEditIndex(null);
+            if(editIndex !== null && setEditIndex) setEditIndex(null);
         }
     }, [editIndex, items,setEditIndex])
     
@@ -41,7 +43,9 @@ export function AddItemForm({ setShowAddItemModal, editIndex, setEditIndex, subm
                         
                         </option>)}
                 </select>
-                <input type="checkbox" className="shoppingListItemCheckbox" /> Purchased
+                { editIndex !== null ? (
+                    <><input type="checkbox" className="shoppingListItemCheckbox" /> {'Purchased'}</>
+                ) : null }
                 <br />
                 {/* <button type="submit" onClick={addItem}>Add Item</button> */}
             </form>

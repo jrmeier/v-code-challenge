@@ -77,3 +77,22 @@
   margin-left: 20px;
   cursor: pointer;
 }
+
+.shopping-list-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px;
+  margin: 0 auto;
+  color: #000000;
+  /* margin: 10 0 10; */
+  text-decoration: none;
+  list-style-type: none;
+  font-weight: 600;
+  font-size: 18px;
+  line-height: 24px;
+  text-align: left;
+  font-family: "Nunito 18px SemiBold";
+  font-style: normal;
+  width: 60%;
+}

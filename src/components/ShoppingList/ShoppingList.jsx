@@ -8,47 +8,25 @@ import './ShoppingList.css'
 
 export function ShoppingList() {
 
-    const { items, setItems } = useContext(AppContext);
+    const { items, setItems, addItem } = useContext(AppContext);
     const [showAddItemModal, setShowAddItemModal] = useState(false);
     const [editIndex, setEditIndex] = useState(null);
 
-    // const handleEditItem = (itemIndex) => {
-    //     console.log('edit item: ',itemIndex)
-    //     setEditIndex(itemIndex)
-    //     setShowAddItemModal(!showAddItemModal)
-    // }
-
-    const handleAddItem = (e) => {
-        // e.preventDefault();
-        console.log("handleAddItem: ", e)
-        // const newItem = {
-        //     name: itemName,
-        //     description: itemDescription,
-        //     quantity: itemQuantity
-        // }
-
-        // setItems([...items, newItem])
-        setShowAddItemModal(false)
+    const handleEditItem = (itemIndex) => {
+        console.log('edit item: ',itemIndex)
+        setEditIndex(itemIndex)
+        setShowAddItemModal(!showAddItemModal)
     }
-
-    const handleEditItem = (e) => {
-        console.log("editItem: ", e)
-        // const newItem = {
-        //     name: itemName,
-        //     description: itemDescription,
-        //     quantity: itemQuantity
-        // }
-
-        // const newItems = [...items];
-        // newItems[editIndex] = newItem;
-
-        // setItems(newItems);
-        setShowAddItemModal(false);
+    
+    const handleAddItem = (itemIndex) => {
+        console.log('edit item: ',itemIndex)
+        setEditIndex(itemIndex)
+        setShowAddItemModal(!showAddItemModal)
     }
+   
 
 
     const handleCheckboxClick = (itemIndex) => {
-        console.log('checkbox clicked: ', itemIndex)
         const newItem = items[itemIndex];
         newItem.checked = !newItem.checked;
         items.pop(itemIndex);
@@ -58,13 +36,21 @@ export function ShoppingList() {
         //
     }
 
+    const handleDeleteItem = (itemIndex) => {
+        console.log('delete item: ', itemIndex)
+        const newItems = [...items];
+        newItems.pop(itemIndex);
+        setItems(newItems);
+    }
+
     return (
         <>
 
         { items.length ?  (
         <div className="shoppingList">
             <div className="shopping-list-header">
-                Your items <button className="add-item-button" onClick={() => setShowAddItemModal(!showAddItemModal)}>Add Item</button>
+                <div className=''>Your items</div>
+                <div className=""><button className="add-item-button" onClick={() => setShowAddItemModal(!showAddItemModal)}>Add Item</button></div>
             </div>
             <ul className="shoppingList">
                 {
@@ -74,13 +60,13 @@ export function ShoppingList() {
                                 <div className="shoppingListItemContent">
                                     <input type="checkbox" className="shoppingListItemCheckbox" onChange={() =>handleCheckboxClick(i)} />
                                     <div className="shoppingListNameAndDescription">
-                                        <div className={`shoppingListItemName ${item?.checked ? 'checked' : ''}`} >{item.name}</div>
-                                        <div className={`shoppingListItemDescription ${item?.checked ? 'checked' : ''}`}>{item.description}</div>
+                                        <div className={`shoppingListItemName ${item?.checked ? 'checked' : ''}`} >{item?.name}</div>
+                                        <div className={`shoppingListItemDescription ${item?.checked ? 'checked' : ''}`}>{item?.description}</div>
                                     </div>
                                 </div>
                                 <div>
                                     <div className="material-symbols-outlined shoppingListItemButton" onClick={()=>handleEditItem(i)}>edit</div>
-                                    <div className="material-symbols-outlined shoppingListItemButton">delete</div>
+                                    <div className="material-symbols-outlined shoppingListItemButton" onClick={() =>handleDeleteItem(i)}>delete</div>
                                 </div>
                             </li>
                         )

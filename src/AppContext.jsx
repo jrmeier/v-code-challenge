@@ -15,9 +15,14 @@ export const AppContext = createContext(defaultAppContext);
 export function AppContextProvider(props) {
     const [items, setItems] = useState(defaultAppContext.items);
 
+    const addItem = (newItem) => {
+        setItems([...items, newItem])
+    }
+
     const value = {
         items,
-        setItems
+        setItems,
+        addItem
     }
 
     return (
