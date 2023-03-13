@@ -2,15 +2,10 @@ import { useState, useContext, useRef, createRef } from 'react';
 import { AppContext } from '../AppContext';
 // import Button from '@mui/material/Button';
 
-import { List, ListItem, ListItemText, ListItemSecondaryAction, IconButton, ListItemIcon, Checkbox, Modal,Box,Typography  } from '@mui/material';
-// import { makeStyles } from '@mui/styles';
-// import { makeStyles} from '@material-ui/core/styles';
-// import DeleteIcon from '@mui/icons-material/Delete';
-// import EditIcon from '@mui/icons-material/Edit';
-// import { EmptyShoppingList } from '../ShoppingList/EmptyShoppingList';
-import { EmptyShoppingListMu } from './EmptyShoppingListMu';
+import { List, ListItem, ListItemText, ListItemSecondaryAction, IconButton, ListItemIcon, Checkbox, Modal,Box,Typography, styled  } from '@mui/material';
+import { EmptyShoppingListMu } from './EmptyShoppingList';
 
-import { DeleteItemDialog, DeleteItemModalMu } from './DeleteItemModalMu';
+import { DeleteItemDialog, DeleteItemModalMu } from './DeleteItemModal';
 
 // const useStyles = makeStyles((theme) => ({
 //     root: {
@@ -31,6 +26,16 @@ import { DeleteItemDialog, DeleteItemModalMu } from './DeleteItemModalMu';
 //         padding: '10px',
 //     }
 // }));
+
+const ListContainer = styled(Box)({
+    display: 'flex',
+    flexDirection: 'column',
+    padding: '0',
+    width: '60%',
+    margin: '0 auto',
+    backgroundColor: 'white',
+    color: '#87898c',
+})
 
 
 export function ShoppingListMu () {
@@ -57,7 +62,7 @@ export function ShoppingListMu () {
     const handleDeleteModalClose = () => console.log('deleteing')
 
     return items.length > 0 ? (
-        <div className={classes.root}>
+        <ListContainer component={'div'}>
             <List>
                 {items.map((item, index) => (
                     <ListItem key={index} className={classes.listItem}>
@@ -81,7 +86,6 @@ export function ShoppingListMu () {
                     </ListItem>
                 ))}
             </List>
-            <div>
                 <DeleteItemDialog
                     openDeleteModal={openDeleteModal}
                     handleDeleteModalClose={handleDeleteModalClose}
@@ -89,6 +93,6 @@ export function ShoppingListMu () {
                     deleteDialogRef={deleteDialogRef}
                     setIsDialogOpen={setIsDeleteDialogOpen}
                 />
-            </div>
-        </div>) : <EmptyShoppingListMu />
+            </ListContainer>
+        ) : <EmptyShoppingListMu />
 }
