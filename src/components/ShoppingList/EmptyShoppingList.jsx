@@ -1,6 +1,7 @@
 import { useState, useContext } from 'react';
-import { Modal } from '../Modal/Modal';
-import { AddItemForm } from '../AddItemForm/AddItemForm';
+// import { Modal } from '../Modal/Modal';
+// import { AddItemForm } from '../AddItemForm/AddItemForm';
+import { Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions, Button } from '@material-ui/core';
 import { AppContext } from '../../AppContext';
 
 export function EmptyShoppingList () {
@@ -16,13 +17,19 @@ export function EmptyShoppingList () {
         </button>
     </div>
      {
-        showAddItemModal && <Modal 
-        setShowModal={setShowAddItemModal}
-        component={<AddItemForm setShowAddItemModal={setShowAddItemModal}/>}
-        actionButtonAction={addItem}
-        actionButtonLabel='Add Item'
-    />
-     }
+        showAddItemModal && <Dialog open={showAddItemModal} onClose={() => setShowAddItemModal(false)}>
+            <DialogTitle>Add an Item</DialogTitle>
+            <DialogContent>
+                <DialogContentText>
+                    Add your new item below
+                </DialogContentText>
+                {/* <AddItemForm setShowAddItemModal={setShowAddItemModal} submitAction={addItem} /> */}
+            </DialogContent>
+            <DialogActions>
+                <Button onClick={() => setShowAddItemModal(false)}>Cancel</Button>
+            </DialogActions>
+        </Dialog>
+    }
     </>
     )
 }

@@ -13,6 +13,7 @@ export function ShoppingList() {
     const [showAddItemModal, setShowAddItemModal] = useState(false);
     const [showDeleteModal, setShowDeleteModal] = useState(false);
     const [editIndex, setEditIndex] = useState(null);
+    const [deleteIndex, setDeleteIndex] = useState(null);
 
     const [newItem, setNewItem] = useState(null)
 
@@ -39,10 +40,16 @@ export function ShoppingList() {
     }
 
     const handleDeleteItem = (itemIndex) => {
-        console.log('delete item: ', itemIndex)
+        setDeleteIndex(itemIndex)
+        setShowDeleteModal(true)
+    }
+    const handleDeleteItemSubmit = () => {
+        console.log('delete item: ', deleteIndex)
         const newItems = [...items];
-        newItems.pop(itemIndex);
+        newItems.pop(deleteIndex);
         setItems(newItems);
+        setDeleteIndex(null)
+        showDeleteModal(false)
     }
 
     // const showDeleteModal = (itemIndex) => {

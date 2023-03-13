@@ -2,10 +2,7 @@ import { useState, createContext } from 'react';
 
 
 const defaultAppContext = {
-    items: [{
-        name: 'Tomatoes',
-        description: 'red apples',
-    }],
+    items: [],
     setItems: Function
 }
 

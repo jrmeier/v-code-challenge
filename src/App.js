@@ -5,6 +5,13 @@ import './App.css';
 
 import { LoadingScreen } from './components/LoadingScreen';
 import { ShoppingList } from './components/ShoppingList/ShoppingList';
+import { ShoppingListMu } from './components/ShoppingListMu';
+
+// import { ThemeProvider } from '@material-ui/core/styles';
+
+// handle strict mode warnings
+// import { unstable_createMuiStrictModeTheme as createMuiTheme } from '@material-ui/core';
+
 
 function App() {
   const [loading, setLoading] = useState(false)
@@ -21,24 +28,29 @@ function App() {
 
   }
 
-
-
-
   return (
     <div className="App">
       <header className="App-header">
         SHOPPING LIST
       </header>
       {loading && <LoadingScreen/> }
-      <ShoppingList />
+      <ShoppingListMu />
     </div>
   );
 }
 
+// const theme = createMuiTheme({
+//   palette: {
+//     primary: {
+//       main: '#1871e8'
+//     }
+//   }
+// })
+
 function AppWithProvider() {
   return (
     <AppContextProvider>
-      <App />
+        <App />
     </AppContextProvider>
   )
 }
