@@ -4,38 +4,39 @@ import { AppContext } from '../AppContext';
 
 import { List, ListItem, ListItemText, ListItemSecondaryAction, IconButton, ListItemIcon, Checkbox, Modal,Box,Typography  } from '@mui/material';
 // import { makeStyles } from '@mui/styles';
-import { makeStyles} from '@material-ui/core/styles';
-import DeleteIcon from '@mui/icons-material/Delete';
-import EditIcon from '@mui/icons-material/Edit';
+// import { makeStyles} from '@material-ui/core/styles';
+// import DeleteIcon from '@mui/icons-material/Delete';
+// import EditIcon from '@mui/icons-material/Edit';
 // import { EmptyShoppingList } from '../ShoppingList/EmptyShoppingList';
 import { EmptyShoppingListMu } from './EmptyShoppingListMu';
 
 import { DeleteItemDialog, DeleteItemModalMu } from './DeleteItemModalMu';
 
-const useStyles = makeStyles((theme) => ({
-    root: {
-        display: 'flex',
-        flexDirection: 'column',
-        padding: '0',
-        width: '60%',
-        margin: '0 auto',
-        backgroundColor: 'white',
-        color: '#87898c',
-    },
-    listItem: {
-        marginTop: '10px',
-        marginBottom: '10px',
-        color: '7d7a7a',
-        textAlign: 'left',
-        border: '1px solid #7d7a7a',
-        padding: '10px',
-    }
-}));
+// const useStyles = makeStyles((theme) => ({
+//     root: {
+//         display: 'flex',
+//         flexDirection: 'column',
+//         padding: '0',
+//         width: '60%',
+//         margin: '0 auto',
+//         backgroundColor: 'white',
+//         color: '#87898c',
+//     },
+//     listItem: {
+//         marginTop: '10px',
+//         marginBottom: '10px',
+//         color: '7d7a7a',
+//         textAlign: 'left',
+//         border: '1px solid #7d7a7a',
+//         padding: '10px',
+//     }
+// }));
 
 
 export function ShoppingListMu () {
     const { items, setItems, addItem } = useContext(AppContext);
-    const classes = useStyles();
+    // const classes = useStyles();
+    const classes = {}
     const deleteDialogRef = useRef();
 
     const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
@@ -71,10 +72,10 @@ export function ShoppingListMu () {
                         <ListItemText primary={item.name} secondary={item.description} />
                         <ListItemSecondaryAction>
                             <IconButton edge="end" aria-label="edit" onClick={() => handleDeleteItem(index)}>
-                                <EditIcon />
+                                <div className="edit-icon">edit</div>
                             </IconButton>
                             <IconButton edge="end" aria-label="delete" onClick={() => setIsDeleteDialogOpen(true)}>
-                                <DeleteIcon />
+                                <div className='delete-icon'>delete</div>
                             </IconButton>
                         </ListItemSecondaryAction>
                     </ListItem>

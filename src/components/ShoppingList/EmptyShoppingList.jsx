@@ -1,7 +1,7 @@
 import { useState, useContext } from 'react';
 // import { Modal } from '../Modal/Modal';
 // import { AddItemForm } from '../AddItemForm/AddItemForm';
-import { Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions, Button } from '@material-ui/core';
+import { Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions, Button } from '@mui/material';
 import { AppContext } from '../../AppContext';
 
 export function EmptyShoppingList () {

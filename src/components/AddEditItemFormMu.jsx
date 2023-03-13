@@ -8,76 +8,75 @@ import {
     Button,
     Slide,
     TextField,
-    makeStyles,
     Select,
     FormControl,
     MenuItem,
     OutlinedInput
-} from '@material-ui/core';
+} from '@mui/material';
 
 
-const useStyles = makeStyles(theme => ({
-    dialogPaper: {
-        height: '100%',
-        width: '33%',
-        display: 'flex',
-        flexDirection: 'column',
-        // justifyContent: 'center',
-        // alignItems: 'center',
-        padding: 0,
-        borderRadius: 0,
-    },
-    dialogTitleContainer: {
-        display: 'flex',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-        width: '100%',
-        height: '64px',
-        margin: 0,
-        backgroundColor: '#FAFAFA',
-        border: '1px solid #c6c6c6',
-        // paddingRight: '50px',
-    },
-    dialogTitle: {
-        // padding: '10px',
-        fontFamily: 'Dosis',
-        fontSize: '1.5rem',
-        fontWeight: 'bold',
-        color: '#87898c',
-    },
-    lastPageIcon: {
-        fontSize: '2rem',
-        color: '#87898c',
-        padding: '10px',
-        cursor: 'pointer',
-    },
-    formControl: {
-        width: '100%'
-    },
-    textFieldRoot: {
-        width: '100%',
-        boxShadow: 'none',
-        borderBottom: 0,
-        outline: 'none',
-        textAlign: 'center',
-        verticalAlign: 'middle',
-        margin: '2px',
-        padding: '10px',
-        borderRadius: '1px',
-    },
-selectRoot: {
-    width: '100%',
-    boxShadow: 'none',
-    borderBottom: 0,
-    outline: 'none',
-    textAlign: 'center',
-    verticalAlign: 'middle',
-    margin: '10px',
-    padding: '10px',
-    borderRadius: '1px',
-},
+// const useStyles = makeStyles(theme => ({
+//     dialogPaper: {
+//         height: '100%',
+//         width: '33%',
+//         display: 'flex',
+//         flexDirection: 'column',
+//         // justifyContent: 'center',
+//         // alignItems: 'center',
+//         padding: 0,
+//         borderRadius: 0,
+//     },
+//     dialogTitleContainer: {
+//         display: 'flex',
+//         justifyContent: 'space-between',
+//         alignItems: 'center',
+//         width: '100%',
+//         height: '64px',
+//         margin: 0,
+//         backgroundColor: '#FAFAFA',
+//         border: '1px solid #c6c6c6',
+//         // paddingRight: '50px',
+//     },
+//     dialogTitle: {
+//         // padding: '10px',
+//         fontFamily: 'Dosis',
+//         fontSize: '1.5rem',
+//         fontWeight: 'bold',
+//         color: '#87898c',
+//     },
+//     lastPageIcon: {
+//         fontSize: '2rem',
+//         color: '#87898c',
+//         padding: '10px',
+//         cursor: 'pointer',
+//     },
+//     formControl: {
+//         width: '100%'
+//     },
+//     textFieldRoot: {
+//         width: '100%',
+//         boxShadow: 'none',
+//         borderBottom: 0,
+//         outline: 'none',
+//         textAlign: 'center',
+//         verticalAlign: 'middle',
+//         margin: '2px',
+//         padding: '10px',
+//         borderRadius: '1px',
+//     },
+// selectRoot: {
+//     width: '100%',
+//     boxShadow: 'none',
+//     borderBottom: 0,
+//     outline: 'none',
+//     textAlign: 'center',
+//     verticalAlign: 'middle',
+//     margin: '10px',
+//     padding: '10px',
+//     borderRadius: '1px',
+// },
 
-}))
+// }))
 
 const Transition = forwardRef(function Transition(props, ref) {
     return <Slide direction="left" ref={ref} {...props} style={{ transformOrigin: 'right', marginLeft: '33.33%',width: '100%', padding: 0, }}/>;
@@ -90,7 +89,8 @@ export function AddEditItemFormMu({
     setEditIndex,
     submitAction
 }) {
-    const classes = useStyles();
+    // const classes = useStyles();
+    const classes = {}
 
     // const [selected]
     

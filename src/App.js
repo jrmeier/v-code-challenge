@@ -1,13 +1,12 @@
-import { useEffect, useState, useContext } from 'react';
+import { useState } from 'react';
 
-import { AppContext, AppContextProvider } from './AppContext';
+import { AppContextProvider } from './AppContext';
 import './App.css';
-
+import { AppBar, Toolbar, Typography } from '@mui/material';
 import { LoadingScreen } from './components/LoadingScreen';
-import { ShoppingList } from './components/ShoppingList/ShoppingList';
 import { ShoppingListMu } from './components/ShoppingListMu';
 
-// import { ThemeProvider } from '@material-ui/core/styles';
+import { ThemeProvider, createTheme } from '@mui/material/styles';
 
 // handle strict mode warnings
 // import { unstable_createMuiStrictModeTheme as createMuiTheme } from '@material-ui/core';
@@ -30,27 +29,36 @@ function App() {
 
   return (
     <div className="App">
-      <header className="App-header">
-        SHOPPING LIST
-      </header>
-      {loading && <LoadingScreen/> }
-      <ShoppingListMu />
+    <AppBar position="static">
+      <Toolbar >
+        <Typography variant="h6">
+          Shopping List
+        </Typography>
+        </Toolbar>
+    </AppBar>
+    {loading && <LoadingScreen/> }
+    <ShoppingListMu />
     </div>
   );
 }
 
-// const theme = createMuiTheme({
-//   palette: {
-//     primary: {
-//       main: '#1871e8'
-//     }
-//   }
-// })
+const theme = createTheme({
+  palette: {
+    primary: {
+      main: '#4d81b7'
+    }
+  },
+  typography: {
+    fontFamily: "Nunito",
+  }
+})
 
 function AppWithProvider() {
   return (
     <AppContextProvider>
+      <ThemeProvider theme={theme}>
         <App />
+      </ThemeProvider>
     </AppContextProvider>
   )
 }
