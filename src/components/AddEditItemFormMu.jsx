@@ -8,7 +8,11 @@ import {
     Button,
     Slide,
     TextField,
-    makeStyles
+    makeStyles,
+    Select,
+    FormControl,
+    MenuItem,
+    OutlinedInput
 } from '@material-ui/core';
 
 
@@ -47,31 +51,31 @@ const useStyles = makeStyles(theme => ({
         padding: '10px',
         cursor: 'pointer',
     },
+    formControl: {
+        width: '100%'
+    },
     textFieldRoot: {
         width: '100%',
-        border: '1px solid #c6c6c6',
         boxShadow: 'none',
         borderBottom: 0,
         outline: 'none',
-        // paddingBottom: '10px',
         textAlign: 'center',
         verticalAlign: 'middle',
-        // paddingTop: '10px',
         margin: '2px',
-        // paddingBottom: '10px',
-        // height: '52px',
-        input: {
-            backgroundColor: 'red',
-            textAlign: 'center',
-            verticalAlign: 'middle',
-            padding: '10px',
-            outline: 'none',
-
-            '&:focus': {
-                borderBottom: 0,
-            },
-        }
-    }
+        padding: '10px',
+        borderRadius: '1px',
+    },
+selectRoot: {
+    width: '100%',
+    boxShadow: 'none',
+    borderBottom: 0,
+    outline: 'none',
+    textAlign: 'center',
+    verticalAlign: 'middle',
+    margin: '10px',
+    padding: '10px',
+    borderRadius: '1px',
+},
 
 }))
 
@@ -87,6 +91,8 @@ export function AddEditItemFormMu({
     submitAction
 }) {
     const classes = useStyles();
+
+    // const [selected]
     
     return (
         <Dialog 
@@ -105,21 +111,48 @@ export function AddEditItemFormMu({
             </div>
         </div>
             <DialogContent classes={{ }}>
-                Add an item
-                < br />
-                Add your new item below
+                <div
+                    style={{ fontSize: '18px', lineHeight: '24px' }}> Add an Item</div>
+                <div style={{ fontSize: '14px'}}>Add your new item below</div>
+            <FormControl variant="outlined" className={classes.formControl}>
             <TextField
-            margin="dense"
-            // label="Item Name"
-            type="email"
+                // margin="dense"
+                // label="Item Name"
+                type="text"
+                fullWidth
+                variant="outlined"
+                hiddenLabel={true}
+                classes={{ root: classes.textFieldRoot }}
+                placeholder="Item Name"
+
+                focused={false}
+          />
+          <TextField
+            type="text"
             fullWidth
-            variant="standard"
+            variant="outlined"
             hiddenLabel={true}
+
             classes={{ root: classes.textFieldRoot }}
-            placeholder="Item Name"
-            underline={false}
+            placeholder="Description"
+            multiline={true}
+            minRows={6}
             focused={false}
           />
+
+          <Select
+            // multiple
+            fullWidth
+            displayEmpty={true}
+            variant="outlined"
+            classes={{ root: classes.selectRoot }}
+          >
+            <MenuItem disabled value="">How many?</MenuItem>
+            <MenuItem value={1}>1</MenuItem>
+            <MenuItem value={2}>2</MenuItem>
+            <MenuItem value={3}>3</MenuItem>
+          </Select>
+            </FormControl>
             </DialogContent>
             <DialogActions>
                 <Button onClick={() => setShowAddItemModal(false)}>Cancel</Button>
