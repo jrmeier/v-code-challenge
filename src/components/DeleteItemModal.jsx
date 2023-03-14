@@ -1,5 +1,5 @@
 import { useState, useRef, forwardRef } from 'react';
-import { Modal, Box, Container, Button, Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions, Fade} from '@mui/material';
+import { Button, Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions} from '@mui/material';
 import { styled } from '@mui/material/styles';
 
 // const useStyles = makeStyles((theme) => ({
@@ -58,15 +58,12 @@ import { styled } from '@mui/material/styles';
 // }))
 
 export const DeleteItemDialog = ({ isDialogOpen, setIsDialogOpen, deleteDialogRef }) =>{
-    // const classes = useStyles();
+
     const classes = {}
-    
     const handleClose = () => {
         setIsDialogOpen(false);
         deleteDialogRef.current.close()
     };
-
-
 
     return (
         <Dialog open={isDialogOpen} onClose={handleClose} ref={deleteDialogRef}  >

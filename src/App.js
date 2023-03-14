@@ -4,7 +4,7 @@ import { AppContextProvider } from './AppContext';
 import './App.css';
 import { AppBar, Toolbar, Typography } from '@mui/material';
 import { LoadingScreen } from './components/LoadingScreen';
-import { ShoppingListMu } from './components/ShoppingListMu';
+import { ShoppingList } from './components/ShoppingList';
 
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 
@@ -29,7 +29,7 @@ function App() {
 
   return (
     <div className="App">
-    <AppBar position="static">
+    <AppBar position="static" style={{ boxShadow: 'none'}}>
       <Toolbar >
         <Typography variant="h6">
           Shopping List
@@ -37,7 +37,7 @@ function App() {
         </Toolbar>
     </AppBar>
     {loading && <LoadingScreen/> }
-    <ShoppingListMu />
+    <ShoppingList />
     </div>
   );
 }

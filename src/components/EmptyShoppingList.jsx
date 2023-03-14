@@ -1,7 +1,6 @@
-import { useState, useContext } from 'react';
+import { useState } from 'react';
 import { Box, Button, styled, Typography } from '@mui/material';
-import { AppContext } from '../AppContext';
-import { AddEditItemFormMu } from './AddEditItemForm';;
+import { AddEditItemFormMu } from './AddEditItemDialog';;
 
 const StyledBox = styled(Box)({
     height: '240px',
@@ -25,7 +24,7 @@ const StyledHeader = styled(Typography)({
     transform: 'translate(-50%, calc(-50% - 3rem))',
 })
 
-const StyledButton = styled(Button)({
+export const StyledButton = styled(Button)({
     backgroundColor: '#1871e8',
     color: 'white',
     border: '1px solid #87898c',
@@ -38,9 +37,8 @@ const StyledButton = styled(Button)({
 })
 
 
-export function EmptyShoppingListMu () {
+export function EmptyShoppingList () {
     const [showAddItemModal, setShowAddItemModal] = useState(false);
-    const { addItem } = useContext(AppContext);
 
     return (
             <StyledBox>
@@ -53,7 +51,8 @@ export function EmptyShoppingListMu () {
                 <AddEditItemFormMu
                     showAddItemModal={showAddItemModal}
                     setShowAddItemModal={setShowAddItemModal}
-                    submitAction={addItem}
+                    editIndex={null}
+                    setEditIndex={() =>null} //
                     />
                 </StyledBox>
     )
