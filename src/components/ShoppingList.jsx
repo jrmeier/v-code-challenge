@@ -4,7 +4,7 @@ import { AppContext } from '../AppContext';
 import { List, ListItem, ListItemText, ListItemSecondaryAction, IconButton, ListItemIcon, Checkbox,Box,Typography, styled,Button  } from '@mui/material';
 import { EmptyShoppingList } from './EmptyShoppingList';
 
-import { DeleteItemDialog, } from './DeleteItemModal';
+import { DeleteItemDialog, } from './DeleteItemDialog';
 import { AddEditItemFormMu } from './AddEditItemDialog';
 // import 
 
@@ -15,6 +15,7 @@ const ListContainer = styled(Box)({
     padding: '0',
     width: '60%',
     margin: '0 auto',
+    marginTop: '20px',
     backgroundColor: 'white',
     color: '#87898c',
 })
@@ -25,7 +26,7 @@ const StyledListTitle = styled(Typography)({
     lineHeight: '24px',
     color: '#000000',
     textAlign: 'left',
-    padding: '10px',
+    // padding: '10px',
     
 })
 
@@ -46,12 +47,7 @@ const StyledListItemSecondaryStrike = styled(Typography)({
     padding: '0',
 })
 
-// const StyledAddItemButton = styled(StyledButton)({
-//     display: 'flex',
-//     position: 'relative',
-//     justifyContent: 'center',
-//     width: '200px'
-// })
+
 
 const StyledAddItemButton = styled(Button)({
     display: 'flex',
@@ -74,7 +70,7 @@ const StyledAddItemContainer = styled(Box)({
     alignItems: 'center',
     justifyContent: 'space-between',
     width: '100%',
-    padding: '10px',
+    paddingTop: '10px',
 })
 
 
@@ -82,12 +78,14 @@ export function ShoppingList () {
     const { items, setItems } = useContext(AppContext);
     const [editIndex, setEditIndex] = useState(null);
     const [showAddEditItem, setShowAddEditItem] = useState(false);
-    const deleteDialogRef = useRef();
-    const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
+    const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);    
+    const [deleteIndex, setDeleteIndex] = useState(null);
     
     const handleDeleteItem = (index) => {
-        const newItems = items.filter((item, i) => i !== index);
-        setItems(newItems);
+        // const newItems = items.filter((item, i) => i !== index);
+        setIsDeleteDialogOpen(true);
+        setDeleteIndex(index)
+        // setItems(newItems);
     }
 
     const handleEditItem = (index) => {
@@ -107,6 +105,18 @@ export function ShoppingList () {
         setItems(newItems);
     }
 
+    const StyledListItem = styled(ListItem)({
+        display: 'flex',
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        border: '0.5px solid #D5DFE9',
+        borderRadius: '4px',
+        '&:hover': {
+            background: 'rgba(213, 223, 233, 0.17)'
+        },
+        marginBottom: '10px'
+    })
+
     return items.length > 0 ? (
         <>
         <ListContainer component={'div'}>
@@ -116,7 +126,7 @@ export function ShoppingList () {
             </StyledAddItemContainer>
             <List>
                 {items.map((item, index) => (
-                    <ListItem key={index}>
+                    <StyledListItem key={index}>
                         <ListItemIcon>
                             <Checkbox
                                 onChange={() =>handleCheckItem(index)}
@@ -138,22 +148,23 @@ export function ShoppingList () {
                                 item.purchased ? <StyledListItemSecondaryStrike component='span'>{item.description}</StyledListItemSecondaryStrike> : item.description
                             }
                             />
-                        <ListItemSecondaryAction>
-                            <IconButton edge="end" aria-label="edit" onClick={() => handleEditItem(index)}>
+                        <ListItemSecondaryAction >
+                            <IconButton edge="end" aria-label="edit" onClick={() => handleEditItem(index)} style={{paddingRight: '20px'}}>
                                 <div className="material-icons">edit</div>
                             </IconButton>
                             <IconButton edge="end" aria-label="delete" onClick={() => handleDeleteItem(index)}>
                                 <div className='material-icons'>delete</div>
                             </IconButton>
                         </ListItemSecondaryAction>
-                    </ListItem>
+                    </StyledListItem>
                 ))}
             </List>
                 <DeleteItemDialog
                     openDeleteModal={setIsDeleteDialogOpen}
                     isDialogOpen={isDeleteDialogOpen}
-                    deleteDialogRef={deleteDialogRef}
                     setIsDialogOpen={setIsDeleteDialogOpen}
+                    setItems={setItems}
+                    deleteIndex={deleteIndex}
                 />
                 <AddEditItemFormMu
                     showAddItemModal={showAddEditItem}
