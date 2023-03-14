@@ -7,6 +7,7 @@ import (
 	"strconv"
 
 	"database/sql"
+
 	"github.com/gorilla/mux"
 	_ "github.com/mattn/go-sqlite3"
 )
@@ -35,7 +36,7 @@ type ErrorMessage struct {
 }
 
 type ShoppingList struct {
-	ListItems []ListItem `json:"listItems"`
+	ListItems []ListItem `json:"shoppingListItems"`
 	OwnerID   int        `json:"ownerId"`
 	ID        int        `json:"id"`
 }
@@ -45,21 +46,21 @@ type ShoppingListOnly struct {
 	OwnerID int `json:"ownerId"`
 }
 
+// Request Structs
 type CreateShoppingListRequest struct {
-    OwnerID int `json:"ownerId"`
-    ListItems []RawListItemPayload `json:"listItems"`
+	OwnerID   int                  `json:"ownerId"`
+	ListItems []RawListItemPayload `json:"shoppingListItems"`
 }
 
 func main() {
 	router := mux.NewRouter()
-	// return all the shopping lists with the id and the owner id
-	router.HandleFunc("/shoppingList", getAllShoppingLists).Methods("GET")
-	// create a new shopping list
-	router.HandleFunc("/shoppingList", createShoppingList).Methods("POST")
-	router.HandleFunc("/shoppingList/{id}", deleteShoppingList).Methods("DELETE")
-	// get a shopping list by id
-	router.HandleFunc("/shoppingList/{id}", getShoppingListById).Methods("GET")
-	log.Println("Starting server on port 5000...")
+	router.HandleFunc("/shoppingList", getAllShoppingListsHandler).Methods("GET")
+	router.HandleFunc("/shoppingList", createShoppingListHandler).Methods("POST")
+	router.HandleFunc("/shoppingList/{id}", deleteShoppingListHandler).Methods("DELETE")
+	router.HandleFunc("/shoppingList/{id}", getShoppingListByIdHandler).Methods("GET")
+	// router.HandleFunc("/shoppingList/{id}/item", addItemToShoppingListHandler).Methods("PUT")
+	// router.HandleFunc("/shoppingList/{id}/item", addItemToShoppingListHandler).Methods("DELETE")
+	log.Println("Starting server on port 5000")
 
 	initializeDB()
 
@@ -67,159 +68,89 @@ func main() {
 	log.Fatal(http.ListenAndServe(":5000", router))
 }
 
-func getAllShoppingLists(w http.ResponseWriter, r *http.Request) {
+// HTTP Handlers
+func getAllShoppingListsHandler(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
+	allShoppingLists := getAllShoppingLists()
 
-	db, err := GetDBConnection()
-	if err != nil {
-		errorMsg := map[string]string{"message": "Database connection error"}
-		jsonErrorMsg, _ := json.Marshal(errorMsg)
-
-		http.Error(w, string(jsonErrorMsg), http.StatusInternalServerError)
-		return
-	}
-
-	rows, err := db.Query("select id, ownerId from shopping_lists")
-	if err != nil {
-		errorMsg := map[string]string{"message": "Database query error"}
-		jsonErrorMsg, _ := json.Marshal(errorMsg)
-
-		http.Error(w, string(jsonErrorMsg), http.StatusInternalServerError)
-		return
-	}
-
-    defer rows.Close()
-
-	if rows.Next() == false {
+	if len(allShoppingLists) == 0 {
 		errorMsg := map[string]string{"message": "No shopping lists found"}
 		jsonErrorMsg, _ := json.Marshal(errorMsg)
 
 		http.Error(w, string(jsonErrorMsg), http.StatusNotFound)
 		return
 	}
-
-    allShoppingLists := []ShoppingListOnly{}
-	for rows.Next() {
-
-		var id int
-		var ownerId int
-		err = rows.Scan(&id, &ownerId)
-		if err != nil {
-			log.Fatal(err)
-		}
-		allShoppingLists = append(allShoppingLists, ShoppingListOnly{ID: id, OwnerID: ownerId})
-	}
-
 	json.NewEncoder(w).Encode(allShoppingLists)
 }
 
-func getShoppingListById(w http.ResponseWriter, r *http.Request) {
+func getShoppingListByIdHandler(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 
-	params := mux.Vars(r)
-	shoppingListId, err := strconv.Atoi(params["id"])
+	shoppingListId, err := strconv.Atoi(mux.Vars(r)["id"])
 
-	db, _ := GetDBConnection()
-	// existingList, err := getShoppingListItemsById(id)
-	var id int
-	var ownerId int
-	row := db.QueryRow("select id, ownerId from shopping_lists where id = ?", shoppingListId)
-
-	err = row.Scan(&id, &ownerId)
 	if err != nil {
-		errorMsg := map[string]string{"message": "Shopping list not found"}
+		errorMsg := map[string]string{"message": "Invalid shopping list id"}
 		jsonErrorMsg, _ := json.Marshal(errorMsg)
+		http.Error(w, string(jsonErrorMsg), http.StatusBadRequest)
+	}
 
+	shoppingList := getShoppingListById(shoppingListId)
+
+	if shoppingList.ID == 0 && shoppingList.OwnerID == 0 {
+		errorMsg := map[string]string{"message": "No shopping list found with that id"}
+		jsonErrorMsg, _ := json.Marshal(errorMsg)
 		http.Error(w, string(jsonErrorMsg), http.StatusNotFound)
+
 		return
 	}
 
-	// format the result into a shopping list
-	var shoppingList ShoppingList
-	shoppingList.ID = shoppingListId
-	shoppingList.OwnerID = ownerId
-	shoppingList.ListItems, _ = getShoppingListItemsById(shoppingListId)
+	log.Println(shoppingList)
 
 	json.NewEncoder(w).Encode(shoppingList)
 }
 
-func createShoppingList(w http.ResponseWriter, r *http.Request) {
+func deleteShoppingListHandler(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 
-
-    var requestBody CreateShoppingListRequest
-    err := json.NewDecoder(r.Body).Decode(&requestBody)
-    if err != nil {
-        errorMsg := map[string]string{"message": "Owner id is required as an integer."}
-        jsonErrorMsg, _ := json.Marshal(errorMsg)
-		http.Error(w, string(jsonErrorMsg), http.StatusBadRequest)
-        return
-    }
-
-    ownerId := requestBody.OwnerID
-    rawList := requestBody.ListItems
-
-    // var rawList []RawListItemPayload
-
-	db, _ := GetDBConnection()
-
-	var listItems []ListItem
-	// create the shoping list first
-	result, err := db.Exec("INSERT INTO shopping_lists (ownerId) VALUES(?);", ownerId)
-    
-    defer db.Close()
-	if err != nil {
-        log.Fatal(err)
-	}
-
-	newShoppingListId, err := result.LastInsertId()
-
-    // get the list items from the request body
-    err = json.NewDecoder(r.Body).Decode(&rawList)
-	// transform the raw list into a list of list items
-	for _, item := range rawList {
-		var purchasedInt int = 0
-		if item.Purchased {
-			purchasedInt = 1
-		}
-		listItems = append(listItems, ListItem{ID: item.ID, Name: item.Name, Description: item.Description, Quantity: item.Quantity, Purchased: purchasedInt, ShoppingListID: int(newShoppingListId)})
-	}
-
-    // insert the list items into the database
-    for _, item := range listItems {
-        addItemToShoppingList(db, int(newShoppingListId), item)
-
-    }
-
-
-	var newShoppingList ShoppingList
-
-	newShoppingList.ID = int(newShoppingListId)
-	newShoppingList.OwnerID = int(ownerId)
-	newShoppingList.ListItems = listItems
-
-	json.NewEncoder(w).Encode(newShoppingList)
-}
-
-func addItemToShoppingList(db *sql.DB, shoppingListId int, item ListItem) (int64, error) {
-    result, err := db.Exec("INSERT INTO shopping_list_items (name, description, quantity, purchased, shoppingListId) VALUES(?, ?, ?, ?, ?);", item.Name, item.Description, item.Quantity, item.Purchased, shoppingListId)
-    if err != nil {
-        return 0, err
-    }
-    return result.LastInsertId()
-}
-
-
-func deleteItem(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Content-Type", "application/json")
+	// Parse shopping list item ID from the URL path
 	params := mux.Vars(r)
-	_, err := strconv.Atoi(params["id"])
+	itemId, err := strconv.Atoi(params["id"])
 	if err != nil {
 		http.Error(w, "Invalid item ID", http.StatusBadRequest)
 		return
 	}
+
+	deletedList := deleteShoppingList(itemId)
+
+	if deletedList.ID == 0 && deletedList.OwnerID == 0 {
+		errorMsg := map[string]string{"message": "Shopping list not found."}
+		jsonErrorMsg, _ := json.Marshal(errorMsg)
+		http.Error(w, string(jsonErrorMsg), http.StatusNotFound)
+		return
+	}
+
+	json.NewEncoder(w).Encode(deletedList)
 }
 
+func createShoppingListHandler(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
+	var requestBody CreateShoppingListRequest
+	err := json.NewDecoder(r.Body).Decode(&requestBody)
+
+	if err != nil {
+		errorMsg := map[string]string{"message": "Owner id is required as an integer."}
+		jsonErrorMsg, _ := json.Marshal(errorMsg)
+		http.Error(w, string(jsonErrorMsg), http.StatusBadRequest)
+		return
+	}
+
+	// err = json.NewDecoder(r.Body).Decode(&rawList)
+	newShoppingList := createShoppingList(requestBody)
+
+	json.NewEncoder(w).Encode(newShoppingList)
+}
+
+// / database functions
 func GetDBConnection() (*sql.DB, error) {
 	db, err := sql.Open("sqlite3", "./ShoppingListApp.db")
 	if err != nil {
@@ -236,15 +167,117 @@ func initializeDB() {
     `
 	_, err = db.Exec(sqlStmt)
 	if err != nil {
-		log.Printf("%q: %s")
+		log.Printf("%q", err)
 	}
+}
+
+func getAllShoppingLists() (allShoppingLists []ShoppingListOnly) {
+	db, err := GetDBConnection()
+
+	rows, err := db.Query("select id, ownerId from shopping_lists")
+	defer rows.Close()
+
+	var foundShoppingLists []ShoppingListOnly
+	for rows.Next() {
+
+		var id int
+		var ownerId int
+		err = rows.Scan(&id, &ownerId)
+		if err != nil {
+			log.Fatal(err)
+		}
+		foundShoppingLists = append(foundShoppingLists, ShoppingListOnly{ID: id, OwnerID: ownerId})
+	}
+
+	return foundShoppingLists
+
+}
+
+func getShoppingListById(shoppingListId int) (shoppingList ShoppingList) {
+	db, _ := GetDBConnection()
+	// existingList, err := getShoppingListItemsById(id)
+	var id int
+	var ownerId int
+	row := db.QueryRow("select id, ownerId from shopping_lists where id = ?", shoppingListId)
+
+	err := row.Scan(&id, &ownerId)
+	var shoppingListToReturn ShoppingList
+
+	if err != nil {
+		if err == sql.ErrNoRows {
+			log.Println("No rows were returned!")
+		} else {
+			log.Fatal(err)
+		}
+	} else {
+		shoppingListToReturn.ID = shoppingListId
+		shoppingListToReturn.OwnerID = ownerId
+		shoppingListToReturn.ListItems, _ = getShoppingListItemsById(shoppingListId)
+	}
+
+	return shoppingListToReturn
+}
+
+func createShoppingList(request CreateShoppingListRequest) ShoppingList {
+	// var rawList []RawListItemPayload
+	db, _ := GetDBConnection()
+
+	log.Println(request)
+	ownerId := request.OwnerID
+	rawList := request.ListItems
+
+	var shoppingListItems []ListItem
+	// create the shoping list first
+	result, _ := db.Exec("INSERT INTO shopping_lists (ownerId) VALUES(?);", ownerId)
+
+	defer db.Close()
+
+	newShoppingListId, _ := result.LastInsertId()
+
+	// get the list items from the request body
+	// err = json.NewDecoder(r.Body).Decode(&rawList)
+	// transform the raw list into a list of list items
+	for _, item := range rawList {
+		var purchasedInt int = 0
+		if item.Purchased {
+			purchasedInt = 1
+		}
+		var listItem ListItem
+		listItem.ID = item.ID
+		listItem.Name = item.Name
+		listItem.Description = item.Description
+		listItem.Quantity = item.Quantity
+		listItem.Purchased = purchasedInt
+		listItem.ShoppingListID = int(newShoppingListId)
+
+		// add the list item to the database
+		addItemToShoppingList(db, int(newShoppingListId), listItem)
+		shoppingListItems = append(shoppingListItems, listItem)
+	}
+	var newShoppingList ShoppingList
+
+	newShoppingList.ID = int(newShoppingListId)
+	newShoppingList.OwnerID = int(ownerId)
+	newShoppingList.ListItems = shoppingListItems
+
+	return newShoppingList
+}
+
+func addItemToShoppingList(db *sql.DB, shoppingListId int, item ListItem) (int64, error) {
+	result, err := db.Exec("INSERT INTO shopping_list_items (name, description, quantity, purchased, shoppingListId) VALUES(?, ?, ?, ?, ?);", item.Name, item.Description, item.Quantity, item.Purchased, shoppingListId)
+	if err != nil {
+		log.Println(err)
+		return 0, err
+	}
+	log.Println("adding item to shopping list")
+	return result.LastInsertId()
 }
 
 func getShoppingListItemsById(shoppingListId int) (ListItems, error) {
 
 	db, err := GetDBConnection()
 
-	rows, err := db.Query("select id, name, description, quantity, purchased from shopping_list_items WHERE id = ?", shoppingListId)
+	rows, err := db.Query("select id, name, description, quantity, purchased from shopping_list_items WHERE shoppingListId = ?", shoppingListId)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -274,50 +307,28 @@ func getShoppingListItemsById(shoppingListId int) (ListItems, error) {
 	return itemList, nil
 }
 
-func deleteShoppingList(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Content-Type", "application/json")
+func deleteShoppingList(shoppingListId int) ShoppingList {
+	log.Printf("Deleting shopping list with ID %d", shoppingListId)
 
-	// Parse shopping list item ID from the URL path
-	params := mux.Vars(r)
-	itemId, err := strconv.Atoi(params["id"])
-	if err != nil {
-		http.Error(w, "Invalid item ID", http.StatusBadRequest)
-		return
-	}
+	// check if the shopping list exists
+	existingList := getShoppingListById(shoppingListId)
 
 	// Get a database connection
-	db, err := GetDBConnection()
-	if err != nil {
-		http.Error(w, "Database error", http.StatusInternalServerError)
-		return
-	}
-	defer db.Close()
+	db, _ := GetDBConnection()
 
-	// Delete the shopping list
-	stmt, err := db.Prepare("DELETE FROM shopping_lists WHERE id = ?")
-	if err != nil {
-		http.Error(w, "Database error", http.StatusInternalServerError)
-		return
-	}
-	defer stmt.Close()
+	// make sure the shopping list exists
+	var shoppingList ShoppingList
+	shoppingList.ID = shoppingListId
 
-	_, err = stmt.Exec(itemId)
-	if err != nil {
-		http.Error(w, "Database error", http.StatusInternalServerError)
-		return
-	}
+	db.QueryRow("SELECT id, ownerId FROM shopping_lists WHERE id = ?", shoppingListId).Scan(&shoppingList.ID, &shoppingList.OwnerID)
 
-	// Delete the shopping list items
-	deleteListItemsStmt, _ := db.Prepare("DELETE FROM shopping_list_items WHERE  = ?")
-	defer stmt.Close()
+	stmt, _ := db.Prepare("DELETE FROM shopping_lists WHERE id = ?")
+	stmt.Exec(shoppingListId)
 
-	_, err = deleteListItemsStmt.Exec(itemId)
-	if err != nil {
-		http.Error(w, "Database error", http.StatusInternalServerError)
-		return
-	}
+	// // Delete the shopping list items
+	deleteListItemsStmt, _ := db.Prepare("DELETE FROM shopping_list_items WHERE shoppingListId = ?")
 
-	// Return a success message
-	response := map[string]string{"message": "Shopping list deleted"}
-	json.NewEncoder(w).Encode(response)
+	deleteListItemsStmt.Exec(shoppingListId)
+
+	return existingList
 }
