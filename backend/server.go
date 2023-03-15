@@ -2,6 +2,7 @@ package main
 
 import (
 	"encoding/json"
+	"errors"
 	"log"
 	"net/http"
 	"strconv"
@@ -28,7 +29,7 @@ type RawListItemPayload struct {
 	Name        string `json:"name"`
 	Description string `json:"description"`
 	Quantity    int    `json:"quantity"`
-	Purchased   bool   `json:"purchased"`
+	Purchased   int    `json:"purchased"`
 }
 
 type ErrorMessage struct {
@@ -52,14 +53,23 @@ type CreateShoppingListRequest struct {
 	ListItems []RawListItemPayload `json:"shoppingListItems"`
 }
 
+type AddItemToShoppingListRequest struct {
+	ShoppingListID int                `json:"shoppingListId"`
+	ListItem       RawListItemPayload `json:"shoppingListItem"`
+}
+
+type UpdateItemInShoppingListRequest struct {
+	ListItem RawListItemPayload `json:"shoppingListItem"`
+}
+
 func main() {
 	router := mux.NewRouter()
 	router.HandleFunc("/shoppingList", getAllShoppingListsHandler).Methods("GET")
 	router.HandleFunc("/shoppingList", createShoppingListHandler).Methods("POST")
-	router.HandleFunc("/shoppingList/{id}", deleteShoppingListHandler).Methods("DELETE")
-	router.HandleFunc("/shoppingList/{id}", getShoppingListByIdHandler).Methods("GET")
-	// router.HandleFunc("/shoppingList/{id}/item", addItemToShoppingListHandler).Methods("PUT")
-	// router.HandleFunc("/shoppingList/{id}/item", addItemToShoppingListHandler).Methods("DELETE")
+	router.HandleFunc("/shoppingList/{shoppingListId}", deleteShoppingListHandler).Methods("DELETE")
+	router.HandleFunc("/shoppingList/{shoppingListId}", getShoppingListByIdHandler).Methods("GET")
+	router.HandleFunc("/shoppingList/{shoppingListId}", addItemToShoppingListHandler).Methods("PUT")
+	router.HandleFunc("/shoppingList/{shoppingListId}/{itemId}", updateItemInShoppingListHandler).Methods("POST")
 	log.Println("Starting server on port 5000")
 
 	initializeDB()
@@ -86,14 +96,15 @@ func getAllShoppingListsHandler(w http.ResponseWriter, r *http.Request) {
 func getShoppingListByIdHandler(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 
-	shoppingListId, err := strconv.Atoi(mux.Vars(r)["id"])
+	shoppingListId, err := strconv.Atoi(mux.Vars(r)["shoppingListId"])
 
 	if err != nil {
 		errorMsg := map[string]string{"message": "Invalid shopping list id"}
 		jsonErrorMsg, _ := json.Marshal(errorMsg)
-		http.Error(w, string(jsonErrorMsg), http.StatusBadRequest)
-	}
 
+		http.Error(w, string(jsonErrorMsg), http.StatusNotFound)
+		return
+	}
 	shoppingList := getShoppingListById(shoppingListId)
 
 	if shoppingList.ID == 0 && shoppingList.OwnerID == 0 {
@@ -104,8 +115,6 @@ func getShoppingListByIdHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	log.Println(shoppingList)
-
 	json.NewEncoder(w).Encode(shoppingList)
 }
 
@@ -114,7 +123,7 @@ func deleteShoppingListHandler(w http.ResponseWriter, r *http.Request) {
 
 	// Parse shopping list item ID from the URL path
 	params := mux.Vars(r)
-	itemId, err := strconv.Atoi(params["id"])
+	itemId, err := strconv.Atoi(params["shoppingListId"])
 	if err != nil {
 		http.Error(w, "Invalid item ID", http.StatusBadRequest)
 		return
@@ -148,6 +157,97 @@ func createShoppingListHandler(w http.ResponseWriter, r *http.Request) {
 	newShoppingList := createShoppingList(requestBody)
 
 	json.NewEncoder(w).Encode(newShoppingList)
+}
+
+func addItemToShoppingListHandler(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
+	var requestBody AddItemToShoppingListRequest
+	err := json.NewDecoder(r.Body).Decode(&requestBody)
+
+	if err != nil {
+		errorMsg := map[string]string{"message": "Invalid request body."}
+		jsonErrorMsg, _ := json.Marshal(errorMsg)
+		http.Error(w, string(jsonErrorMsg), http.StatusBadRequest)
+		return
+	}
+
+	shoppingListId, _ := strconv.Atoi(mux.Vars(r)["shoppingListId"])
+
+	// makes sure the shopping list exists
+	shoppingListExists := doesShoppingListExist(shoppingListId)
+
+	if !shoppingListExists {
+		errorMsg := map[string]string{"message": "Shopping list not found."}
+		jsonErrorMsg, _ := json.Marshal(errorMsg)
+		http.Error(w, string(jsonErrorMsg), http.StatusNotFound)
+		return
+	}
+
+	newListItem := ListItem{
+		Name:        requestBody.ListItem.Name,
+		Description: requestBody.ListItem.Description,
+		Quantity:    requestBody.ListItem.Quantity,
+		Purchased:   requestBody.ListItem.Purchased,
+	}
+
+	newItemId, err := addItemToShoppingList(shoppingListId, newListItem)
+
+	newListItem.ID = int(newItemId)
+
+	if err != nil {
+		errorMsg := map[string]string{"message": "Failed to add item to shopping list."}
+		jsonErrorMsg, _ := json.Marshal(errorMsg)
+		http.Error(w, string(jsonErrorMsg), http.StatusInternalServerError)
+		return
+	}
+
+	json.NewEncoder(w).Encode(newListItem)
+}
+
+func updateItemInShoppingListHandler(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
+	var requestBody UpdateItemInShoppingListRequest
+	err := json.NewDecoder(r.Body).Decode(&requestBody)
+
+	if err != nil {
+		errorMsg := map[string]string{"message": "Invalid request body."}
+		jsonErrorMsg, _ := json.Marshal(errorMsg)
+		http.Error(w, string(jsonErrorMsg), http.StatusBadRequest)
+		return
+	}
+
+	shoppingListId, _ := strconv.Atoi(mux.Vars(r)["shoppingListId"])
+	itemId, _ := strconv.Atoi(mux.Vars(r)["itemId"])
+
+	// makes sure the shopping list exists
+	shoppingListExists := doesShoppingListExist(shoppingListId)
+
+	if !shoppingListExists {
+		errorMsg := map[string]string{"message": "Shopping list not found."}
+		jsonErrorMsg, _ := json.Marshal(errorMsg)
+		http.Error(w, string(jsonErrorMsg), http.StatusNotFound)
+		return
+	}
+
+	// update the item
+	updatedItem := ListItem{
+		ID:          itemId,
+		Name:        requestBody.ListItem.Name,
+		Description: requestBody.ListItem.Description,
+		Quantity:    requestBody.ListItem.Quantity,
+		Purchased:   requestBody.ListItem.Purchased,
+	}
+
+	err = updateItemInShoppingList(shoppingListId, updatedItem)
+	if err != nil {
+		errorMsg := map[string]string{"message": "Failed to update item in shopping list."}
+		jsonErrorMsg, _ := json.Marshal(errorMsg)
+		http.Error(w, string(jsonErrorMsg), http.StatusInternalServerError)
+		return
+	}
+
+	json.NewEncoder(w).Encode(updatedItem)
+
 }
 
 // / database functions
@@ -238,20 +338,16 @@ func createShoppingList(request CreateShoppingListRequest) ShoppingList {
 	// err = json.NewDecoder(r.Body).Decode(&rawList)
 	// transform the raw list into a list of list items
 	for _, item := range rawList {
-		var purchasedInt int = 0
-		if item.Purchased {
-			purchasedInt = 1
-		}
 		var listItem ListItem
 		listItem.ID = item.ID
 		listItem.Name = item.Name
 		listItem.Description = item.Description
 		listItem.Quantity = item.Quantity
-		listItem.Purchased = purchasedInt
+		listItem.Purchased = item.Purchased
 		listItem.ShoppingListID = int(newShoppingListId)
 
 		// add the list item to the database
-		addItemToShoppingList(db, int(newShoppingListId), listItem)
+		addItemToShoppingList(int(newShoppingListId), listItem)
 		shoppingListItems = append(shoppingListItems, listItem)
 	}
 	var newShoppingList ShoppingList
@@ -263,14 +359,33 @@ func createShoppingList(request CreateShoppingListRequest) ShoppingList {
 	return newShoppingList
 }
 
-func addItemToShoppingList(db *sql.DB, shoppingListId int, item ListItem) (int64, error) {
+func addItemToShoppingList(shoppingListId int, item ListItem) (int64, error) {
+	db, _ := GetDBConnection()
 	result, err := db.Exec("INSERT INTO shopping_list_items (name, description, quantity, purchased, shoppingListId) VALUES(?, ?, ?, ?, ?);", item.Name, item.Description, item.Quantity, item.Purchased, shoppingListId)
 	if err != nil {
 		log.Println(err)
 		return 0, err
 	}
-	log.Println("adding item to shopping list")
+
 	return result.LastInsertId()
+}
+
+func updateItemInShoppingList(shoppingListId int, item ListItem) error {
+	db, _ := GetDBConnection()
+	// make sure the list exists
+	shoppingListExists := doesShoppingListExist(shoppingListId)
+	if !shoppingListExists {
+		return errors.New("Shopping list does not exist")
+	}
+
+	_, err := db.Exec("UPDATE shopping_list_items SET name = ?, description = ?, quantity = ?, purchased = ? WHERE id = ? AND shoppingListId = ?", item.Name, item.Description, item.Quantity, item.Purchased, item.ID, shoppingListId)
+	if err != nil {
+		log.Println(err)
+		return err
+	}
+	log.Println("editing item to shopping")
+
+	return nil
 }
 
 func getShoppingListItemsById(shoppingListId int) (ListItems, error) {
@@ -331,4 +446,15 @@ func deleteShoppingList(shoppingListId int) ShoppingList {
 	deleteListItemsStmt.Exec(shoppingListId)
 
 	return existingList
+}
+
+func doesShoppingListExist(shoppingListId int) bool {
+	// Get a database connection
+	shoppingList := getShoppingListById(shoppingListId)
+
+	if shoppingList.ID == 0 && shoppingList.OwnerID == 0 {
+		return false
+	}
+
+	return true
 }
