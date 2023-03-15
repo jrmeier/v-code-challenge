@@ -1,9 +1,10 @@
 module.exports = {
+  setupFilesAfterEnv: [
+    '@testing-library/react/cleanup-after-each',
+    '@testing-library/jest-dom/extend-expect',
+  ],
+  testMatch: [
+    '**/?(*.)spec.ts?(x)',
+  ],
   testEnvironment: 'jsdom',
-  transform: {
-    '^.+\\.(js)$': 'babel-jest',
-    '^.+\\.jsx?$': 'babel-jest',
-    '^.+\\.(js|jsx)?$': 'babel-jest',
-  },
-  testPathIgnorePatterns: ['node_modules/', 'backend/'],
 };

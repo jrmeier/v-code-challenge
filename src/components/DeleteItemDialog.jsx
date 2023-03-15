@@ -1,11 +1,13 @@
-import React, { useContext } from 'react';
+import React, { useContext, forwardRef } from 'react';
 import {
   Button, Dialog, DialogTitle, DialogContent, DialogActions,
 } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import { AppContext } from '../AppContext';
 
-const StyledDialog = styled(Dialog)({
+const StyledDialog = styled(forwardRef((props, ref) => (
+  <Dialog ref={ref} {...props} /> // eslint-disable-line react/jsx-props-no-spreading
+)))({
   display: 'flex',
   backgroundColor: 'white',
   padding: '30px',
@@ -69,15 +71,17 @@ export default function DeleteItemDialog({ isDialogOpen, setIsDialogOpen, delete
     deleteItem(deleteId);
   };
   return (
-    <StyledDialog open={isDialogOpen} onClose={handleClose}>
-      <StyledDialogTitle>Delete Item?</StyledDialogTitle>
-      <StyledDialogContent>
-        Are you sure you want to delete this item? This cannot be undone.
-      </StyledDialogContent>
-      <DialogFooter>
-        <CancelButton onClick={handleClose}>Cancel</CancelButton>
-        <DeleteButton onClick={handleDelete}>Delete</DeleteButton>
-      </DialogFooter>
-    </StyledDialog>
+    <div>
+      <StyledDialog open={isDialogOpen} onClose={handleClose}>
+        <StyledDialogTitle>Delete Item?</StyledDialogTitle>
+        <StyledDialogContent>
+          Are you sure you want to delete this item? This cannot be undone.
+        </StyledDialogContent>
+        <DialogFooter>
+          <CancelButton onClick={handleClose}>Cancel</CancelButton>
+          <DeleteButton onClick={handleDelete}>Delete</DeleteButton>
+        </DialogFooter>
+      </StyledDialog>
+    </div>
   );
 }
