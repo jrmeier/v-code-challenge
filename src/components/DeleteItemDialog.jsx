@@ -58,8 +58,9 @@ const DeleteButton = styled(Button)({
     }
 )
 
-export const DeleteItemDialog = ({ isDialogOpen, setIsDialogOpen, deleteIndex }) =>{
-  const { items, setItems } = useContext(AppContext);
+export const DeleteItemDialog = ({ isDialogOpen, setIsDialogOpen, deleteId }) =>{
+  const { items, setItems, deleteItem } = useContext(AppContext);
+  // console.log("deleteIndex", deleteId)
     const handleClose = () => {
         setIsDialogOpen(false);
     };
@@ -67,9 +68,7 @@ export const DeleteItemDialog = ({ isDialogOpen, setIsDialogOpen, deleteIndex })
     const handleDelete = () => {
         // delete item
         setIsDialogOpen(false)
-        const newItems = [...items]
-        newItems.pop(deleteIndex)
-        setItems(newItems)
+        deleteItem(deleteId)
     }
     return (
         <StyledDialog open={isDialogOpen} onClose={handleClose}  >

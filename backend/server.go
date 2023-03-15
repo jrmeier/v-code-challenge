@@ -3,6 +3,7 @@ package main
 import (
 	"encoding/json"
 	"errors"
+
 	"log"
 	"net/http"
 	"strconv"
@@ -64,21 +65,49 @@ type UpdateItemInShoppingListRequest struct {
 
 func main() {
 	router := mux.NewRouter()
-	router.HandleFunc("/shoppingList", getAllShoppingListsHandler).Methods("GET")
-	router.HandleFunc("/shoppingList", createShoppingListHandler).Methods("POST")
-	router.HandleFunc("/shoppingList/{shoppingListId}", deleteShoppingListHandler).Methods("DELETE")
-	router.HandleFunc("/shoppingList/{shoppingListId}", getShoppingListByIdHandler).Methods("GET")
-	router.HandleFunc("/shoppingList/{shoppingListId}", addItemToShoppingListHandler).Methods("PUT")
-	router.HandleFunc("/shoppingList/{shoppingListId}/{itemId}", updateItemInShoppingListHandler).Methods("POST")
+
+	router.Use(corsHandler)
+	router.HandleFunc("/api", getAllShoppingListsHandler).Methods("GET")
+	router.HandleFunc("/api", createShoppingListHandler).Methods("POST")
+	router.HandleFunc("/api", deleteShoppingListHandler).Methods("DELETE")
+	router.HandleFunc("/api/{shoppingListId}", getShoppingListByIdHandler).Methods("GET")
+	router.HandleFunc("/api/{shoppingListId}", addItemToShoppingListHandler).Methods("PUT")
+	router.HandleFunc("/api/{shoppingListId}/{itemId}", updateItemInShoppingListHandler).Methods("POST")
+	router.HandleFunc("/api/{shoppingListId}/{itemId}", deleteItemFromShoppingListHandler).Methods("DELETE")
+	
 	log.Println("Starting server on port 5000")
 
 	initializeDB()
 
 	// Start the server
-	log.Fatal(http.ListenAndServe(":5000", router))
+	http.ListenAndServe(":5000", corsHandler(router))
 }
+func corsHandler(next http.Handler) http.Handler {
+    return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+        // Set headers
+        w.Header().Set("Access-Control-Allow-Origin", "*")
+        w.Header().Set("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS")
+        w.Header().Set("Access-Control-Allow-Headers", "Content-Type, Authorization")
 
+        if r.Method == "OPTIONS" {
+            // For preflight requests
+            w.WriteHeader(http.StatusOK)
+            return
+        }
+
+        // Handle Content-Type header
+        contentType := r.Header.Get("Content-Type")
+        if contentType == "application/json" {
+            w.Header().Set("Content-Type", "application/json")
+        }
+
+        // Call the next handler
+        next.ServeHTTP(w, r)
+    })
+}
 // HTTP Handlers
+
+
 func getAllShoppingListsHandler(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	allShoppingLists := getAllShoppingLists()
@@ -161,6 +190,8 @@ func createShoppingListHandler(w http.ResponseWriter, r *http.Request) {
 
 func addItemToShoppingListHandler(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
+	log.Println("Adding item to shopping list...")
+
 	var requestBody AddItemToShoppingListRequest
 	err := json.NewDecoder(r.Body).Decode(&requestBody)
 
@@ -219,16 +250,6 @@ func updateItemInShoppingListHandler(w http.ResponseWriter, r *http.Request) {
 	shoppingListId, _ := strconv.Atoi(mux.Vars(r)["shoppingListId"])
 	itemId, _ := strconv.Atoi(mux.Vars(r)["itemId"])
 
-	// makes sure the shopping list exists
-	shoppingListExists := doesShoppingListExist(shoppingListId)
-
-	if !shoppingListExists {
-		errorMsg := map[string]string{"message": "Shopping list not found."}
-		jsonErrorMsg, _ := json.Marshal(errorMsg)
-		http.Error(w, string(jsonErrorMsg), http.StatusNotFound)
-		return
-	}
-
 	// update the item
 	updatedItem := ListItem{
 		ID:          itemId,
@@ -247,9 +268,26 @@ func updateItemInShoppingListHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	json.NewEncoder(w).Encode(updatedItem)
-
 }
 
+func deleteItemFromShoppingListHandler(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
+
+	// Parse shopping list item ID from the URL path
+	params := mux.Vars(r)
+	itemId, err := strconv.Atoi(params["itemId"])
+	shoppingListId, err := strconv.Atoi(params["shoppingListId"])
+
+	if err != nil {
+		http.Error(w, "Invalid item ID", http.StatusBadRequest)
+		return
+	}
+
+	deleteItemFromShoppingList(shoppingListId, itemId)
+
+	json.NewEncoder(w).Encode(map[string]string{"message": "Item deleted from shopping list."})
+
+}
 // / database functions
 func GetDBConnection() (*sql.DB, error) {
 	db, err := sql.Open("sqlite3", "./ShoppingListApp.db")
@@ -457,4 +495,21 @@ func doesShoppingListExist(shoppingListId int) bool {
 	}
 
 	return true
+}
+
+
+func deleteItemFromShoppingList(shoppingListId int, itemId int) error {
+	// Get a database connection
+	db, _ := GetDBConnection()
+
+	// make sure the shopping list exists
+	shoppingListExists := doesShoppingListExist(shoppingListId)
+	if !shoppingListExists {
+		return errors.New("Shopping list does not exist")
+	}
+
+	stmt, _ := db.Prepare("DELETE FROM shopping_list_items WHERE id = ?")
+	stmt.Exec(itemId)
+
+	return nil
 }

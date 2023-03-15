@@ -1,4 +1,5 @@
-import { useState, createContext } from 'react';
+import { useState, createContext, useEffect } from 'react';
+import { addShoppingItem, fetchShoppingList, editShoppingItem, deleteShoppingItem } from './api';
 
 
 export const updateLocalStorageWithItems = (items) => {
@@ -7,15 +8,10 @@ export const updateLocalStorageWithItems = (items) => {
 
 export const getItemsFromLocalStorage = () => {
     return JSON.parse(localStorage.getItem('items'))
-    }
+}
 
 const defaultAppContext = {
-    items: [{
-        name: 'Milk',
-        description: '2% milk',
-        quantity: 1,
-        purchased: false
-    }],
+    items: [],
     setItems: Function
 }
 
@@ -24,27 +20,59 @@ export const AppContext = createContext(defaultAppContext);
 
 export function AppContextProvider(props) {
     const [items, setItems] = useState(defaultAppContext.items);
+    const [loading, setLoading] = useState(false);
 
-    const addItem = (newItem) => {
-        console.log("adding a new item from the context: ", newItem)
-        const newItems = [...items, newItem];
+    const shoppingListId = 1
+
+    const addItem = async (newItem) => {
+        // add the item to the shopping list
+        const newItemWithId = await addShoppingItem(shoppingListId, newItem)
+        const newItems = [...items, newItemWithId];
         setItems(newItems)
-        updateLocalStorageWithItems(newItems)
+        
+        // updateLocalStorageWithItems(newItems)
     }
 
-    const editItem = (newItem, index) => {
-        console.log("editing item: ", newItem, index)
-        const newItems = [...items];
-        newItems[index] = newItem;
-        setItems(newItems);
-        updateLocalStorageWithItems(newItems)
+    const editItem = (newItem) => {
+        editShoppingItem(shoppingListId, newItem)
+        // updateLocalStorageWithItems(newItems)
+        const itemIndex = items.findIndex((item) => item.id === newItem.id)
+        const newItems = [...items]
+        newItems[itemIndex] = newItem
+        setItems(newItems)
     }
+
+    const loadItems = async () => {
+        setLoading(true)
+        const shoppingList = await fetchShoppingList(shoppingListId)
+        setItems(shoppingList.shoppingListItems)
+        setLoading(false)
+    }
+
+    const deleteItem = (itemId) => {
+        deleteShoppingItem(shoppingListId, itemId)
+        const newItems = items.filter((item) => item.id !== itemId);
+        setItems(newItems);
+    }
+
+
+  useEffect(() => {
+    console.log('useEffect called in app context');
+    const fetchData = async () => {
+      loadItems();
+    };
+
+    fetchData();
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
     const value = {
         items,
         setItems,
         addItem,
-        editItem
+        editItem,
+        loadItems,
+        loading,
+        deleteItem
     }
 
     return (

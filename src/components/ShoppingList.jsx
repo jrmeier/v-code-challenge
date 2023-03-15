@@ -1,4 +1,4 @@
-import { useState, useContext, useRef } from 'react';
+import { useState, useContext  } from 'react';
 import { AppContext } from '../AppContext';
 
 import { List, ListItem, ListItemText, ListItemSecondaryAction, IconButton, ListItemIcon, Checkbox,Box,Typography, styled,Button  } from '@mui/material';
@@ -75,34 +75,34 @@ const StyledAddItemContainer = styled(Box)({
 
 
 export function ShoppingList () {
-    const { items, setItems } = useContext(AppContext);
-    const [editIndex, setEditIndex] = useState(null);
+    const { items, setItems, editItem } = useContext(AppContext);
+    const [editItemId, setEditItemId] = useState(null);
     const [showAddEditItem, setShowAddEditItem] = useState(false);
-    const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);    
-    const [deleteIndex, setDeleteIndex] = useState(null);
+    const [isDeleteDialogOpen, setIsDeleteDialogOpen] =  useState(false);    
+    const [deleteId, setDeleteId] = useState(null);
     
-    const handleDeleteItem = (index) => {
-        // const newItems = items.filter((item, i) => i !== index);
+    const handleDeleteItem = (itemId) => {
+        // const newItems = items.filter((item, i) => i !== item.id);
         setIsDeleteDialogOpen(true);
-        setDeleteIndex(index)
-        // setItems(newItems);
+        setDeleteId(itemId)
+
     }
 
-    const handleEditItem = (index) => {
-        setEditIndex(index);
+    const handleEditItem = (itemId) => {
+        setEditItemId(itemId);
         setShowAddEditItem(true);
     }
 
     const handleAddItem = (item) => {
-        setEditIndex(null);
+        setEditItemId(null);
         setShowAddEditItem(true);
     }
 
 
-    const handleCheckItem = (index) => {
-        const newItems = [...items];
-        newItems[index].purchased = !newItems[index].purchased;
-        setItems(newItems);
+    const handleCheckItem = (itemId) => {
+        const newItem = items.find((item) => item.id === itemId)
+        newItem.purchased = !newItem.purchased
+        editItem(newItem)
     }
 
     const StyledListItem = styled(ListItem)({
@@ -125,13 +125,13 @@ export function ShoppingList () {
                 <StyledAddItemButton onClick={() =>handleAddItem()}>Add Item</StyledAddItemButton>
             </StyledAddItemContainer>
             <List>
-                {items.map((item, index) => (
-                    <StyledListItem key={index}>
+                {items.map((item) => (
+                    <StyledListItem key={item.id}>
                         <ListItemIcon>
                             <Checkbox
-                                onChange={() =>handleCheckItem(index)}
+                                onChange={() =>handleCheckItem(item.id)}
                                 edge="start"
-                                checked={item.purchased}
+                                checked={Boolean(item.purchased)}
                                 tabIndex={-1}
                                 disableRipple
                             />
@@ -149,10 +149,10 @@ export function ShoppingList () {
                             }
                             />
                         <ListItemSecondaryAction >
-                            <IconButton edge="end" aria-label="edit" onClick={() => handleEditItem(index)} style={{paddingRight: '20px'}}>
+                            <IconButton edge="end" aria-label="edit" onClick={() => handleEditItem(item.id)} style={{paddingRight: '20px'}}>
                                 <div className="material-icons">edit</div>
                             </IconButton>
-                            <IconButton edge="end" aria-label="delete" onClick={() => handleDeleteItem(index)}>
+                            <IconButton edge="end" aria-label="delete" onClick={() => handleDeleteItem(item.id)}>
                                 <div className='material-icons'>delete</div>
                             </IconButton>
                         </ListItemSecondaryAction>
@@ -164,13 +164,13 @@ export function ShoppingList () {
                     isDialogOpen={isDeleteDialogOpen}
                     setIsDialogOpen={setIsDeleteDialogOpen}
                     setItems={setItems}
-                    deleteIndex={deleteIndex}
+                    deleteId={deleteId}
                 />
                 <AddEditItemFormMu
                     showAddItemModal={showAddEditItem}
                     setShowAddItemModal={setShowAddEditItem}
-                    editIndex={editIndex}
-                    setEditIndex={setEditIndex}
+                    editItemId={editItemId}
+                    setEditItemId={setEditItemId}
                 />
             </ListContainer>
             </>

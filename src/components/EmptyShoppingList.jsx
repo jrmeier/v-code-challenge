@@ -51,8 +51,8 @@ export function EmptyShoppingList () {
                 <AddEditItemFormMu
                     showAddItemModal={showAddItemModal}
                     setShowAddItemModal={setShowAddItemModal}
-                    editIndex={null}
-                    setEditIndex={() =>null} //
+                    editItemId={null}
+                    setEditItemId={() =>null} //
                     />
                 </StyledBox>
     )

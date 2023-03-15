@@ -131,11 +131,26 @@ const StyledTextInput = styled(TextField)(
     }
 )
 
+const DescriptionContainer = styled("div")({
+    position: "relative",
+  });
+  
+const DescriptionCountDisplay = styled("div")({
+    position: "absolute",
+    bottom: "30px",
+    right: "10px",
+    fontFamily: "Nunito",
+    fontSize: "12px",
+    fontWeight: 400,
+    lineHeight: "16px",
+    letterSpacing: "0px",
+});
+
 export function AddEditItemFormMu({ 
     showAddItemModal,
     setShowAddItemModal,
-    editIndex,
-    setEditIndex,
+    editItemId,
+    setEditItemId,
 }) {
     const { items, addItem, editItem } = useContext(AppContext);
 
@@ -153,22 +168,21 @@ export function AddEditItemFormMu({
             quantity: itemQuantity,
             purchased: itemPurchased,
         }
-        if (editIndex === null || editIndex === undefined) {
+        if (editItemId === null || editItemId === undefined) {
             addItem(newItem)
         } else {
-            console.log("editIndex: ", editIndex)
-            editItem(newItem, editIndex);
+            newItem.id = editItemId
+            editItem(newItem);
         }
 
-        console.log('save clicked: ', newItem);
         setShowAddItemModal(false);
     }
 
 
     useEffect(() => {
-        console.log('add edit form editIndex: ', editIndex)
-        if (editIndex !== null) {
-            const itemToEdit = items[editIndex];
+        console.log('editItemId', editItemId);
+        if (editItemId !== null) {
+            const itemToEdit = items[editItemId];
             setItemName(itemToEdit.name);
             setItemDescription(itemToEdit.description);
             setItemQuantity(itemToEdit.quantity);
@@ -176,17 +190,15 @@ export function AddEditItemFormMu({
         }
 
         return () => {
-            // clear the form when the modal is closed
-            console.log('cleaning up')
             setItemName('');
             setItemDescription('');
             setItemQuantity('');
             setItemPurchased(false);
-            // setEditIndex(null);
+            // setEditItemId(null);
         }
-    }, [editIndex, items, setEditIndex])
+    }, [editItemId, items, setEditItemId])
 
-    const addOrEditText = editIndex === null ? 'Add' : 'Edit';
+    const addOrEditText = editItemId === null ? 'Add' : 'Edit';
     
     return (
         <StyledAddEditDialog 
@@ -219,7 +231,7 @@ export function AddEditItemFormMu({
                 placeholder="Item Name"
                 focused={false}
           />
-
+            <DescriptionContainer>
           <StyledTextInput
             type="text"
             value={itemDescription}
@@ -232,7 +244,8 @@ export function AddEditItemFormMu({
             minRows={6}
             focused={false}
           />
-
+            <DescriptionCountDisplay> {itemDescription.length}/100 </DescriptionCountDisplay>
+            </DescriptionContainer>
         <StyledQuantitySelect
             fullWidth
             variant="outlined"
@@ -247,12 +260,12 @@ export function AddEditItemFormMu({
             <MenuItem value={2}>2</MenuItem>
             <MenuItem value={3}>3</MenuItem>
         </StyledQuantitySelect>
-        {editIndex !== null ?
+        {editItemId !== null ?
             <FormControlLabel
             label="Purchased"
             control={
                 <Checkbox
-                checked={itemPurchased}
+                checked={Boolean(itemPurchased)}
                 onChange={(e) => setItemPurchased(e.target.checked)}
                 />
             }/> : ''
@@ -263,7 +276,7 @@ export function AddEditItemFormMu({
                 Cancel
           </StyledCancelButton>
           <StyledSaveEditButton fullWidth={false} onClick={handleSaveClick}>
-                {editIndex === null ? 'Add item' : 'Save item'}
+                {editItemId === null ? 'Add item' : 'Save item'}
           </StyledSaveEditButton>
         </StyledDialogActions>
           

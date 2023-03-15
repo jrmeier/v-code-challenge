@@ -1,6 +1,6 @@
-import { useState } from 'react';
+import { useContext, useCallback, useEffect } from 'react';
 
-import { AppContextProvider } from './AppContext';
+import { AppContextProvider, AppContext } from './AppContext';
 import './App.css';
 import { AppBar, Toolbar, Typography } from '@mui/material';
 import { LoadingScreen } from './components/LoadingScreen';
@@ -12,20 +12,9 @@ import { ThemeProvider, createTheme } from '@mui/material/styles';
 // import { unstable_createMuiStrictModeTheme as createMuiTheme } from '@material-ui/core';
 
 
+
 function App() {
-  const [loading, setLoading] = useState(false)
-  
-  const fakeLoad = () => {
-
-    
-    console.log('Loading...')
-    setLoading(true)
-      setInterval(() => {
-      console.log('Loaded!')
-      setLoading(false)
-    }, 3000)
-
-  }
+  const { loading, loadItems } = useContext(AppContext);
 
   return (
     <div className="App">
