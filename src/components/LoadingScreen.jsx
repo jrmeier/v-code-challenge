@@ -1,9 +1,10 @@
-import "./LoadingScreen.css";
+import React from 'react';
+import './LoadingScreen.css';
 
-export function LoadingScreen() {
+export default function LoadingScreen() {
   return (
     <div className="loadingContainer">
-      <div className="loadingSpinner"></div>
+      <div className="loadingSpinner" />
     </div>
   );
 }
