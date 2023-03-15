@@ -16,8 +16,8 @@ import { AppContext } from '../AppContext';
 
 import { EmptyShoppingList } from './EmptyShoppingList';
 
-import { DeleteItemDialog } from './DeleteItemDialog';
-import { AddEditItemFormMu } from './AddEditItemDialog';
+import DeleteItemDialog from './DeleteItemDialog';
+import AddEditItemFormMu from './AddEditItemDialog';
 
 const ListContainer = styled(Box)({
   display: 'flex',
@@ -151,10 +151,10 @@ export default function ShoppingList() {
             />
             <ListItemSecondaryAction>
               <IconButton edge="end" aria-label="edit" onClick={() => handleEditItem(item.id)} style={{ paddingRight: '20px' }}>
-                <div className="material-icons">edit</div>
+                <div className="material-symbols-outlined">edit</div>
               </IconButton>
               <IconButton edge="end" aria-label="delete" onClick={() => handleDeleteItem(item.id)}>
-                <div className="material-icons">delete</div>
+                <div className="material-symbols-outlined">delete</div>
               </IconButton>
             </ListItemSecondaryAction>
           </StyledListItem>

@@ -74,7 +74,7 @@ func main() {
 	router.HandleFunc("/api/{shoppingListId}", addItemToShoppingListHandler).Methods("PUT")
 	router.HandleFunc("/api/{shoppingListId}/{itemId}", updateItemInShoppingListHandler).Methods("POST")
 	router.HandleFunc("/api/{shoppingListId}/{itemId}", deleteItemFromShoppingListHandler).Methods("DELETE")
-	
+
 	log.Println("Starting server on port 5000")
 
 	initializeDB()
@@ -83,30 +83,30 @@ func main() {
 	http.ListenAndServe(":5000", corsHandler(router))
 }
 func corsHandler(next http.Handler) http.Handler {
-    return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-        // Set headers
-        w.Header().Set("Access-Control-Allow-Origin", "*")
-        w.Header().Set("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS")
-        w.Header().Set("Access-Control-Allow-Headers", "Content-Type, Authorization")
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		// Set headers
+		w.Header().Set("Access-Control-Allow-Origin", "*")
+		w.Header().Set("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS")
+		w.Header().Set("Access-Control-Allow-Headers", "Content-Type, Authorization")
 
-        if r.Method == "OPTIONS" {
-            // For preflight requests
-            w.WriteHeader(http.StatusOK)
-            return
-        }
+		if r.Method == "OPTIONS" {
+			// For preflight requests
+			w.WriteHeader(http.StatusOK)
+			return
+		}
 
-        // Handle Content-Type header
-        contentType := r.Header.Get("Content-Type")
-        if contentType == "application/json" {
-            w.Header().Set("Content-Type", "application/json")
-        }
+		// Handle Content-Type header
+		contentType := r.Header.Get("Content-Type")
+		if contentType == "application/json" {
+			w.Header().Set("Content-Type", "application/json")
+		}
 
-        // Call the next handler
-        next.ServeHTTP(w, r)
-    })
+		// Call the next handler
+		next.ServeHTTP(w, r)
+	})
 }
-// HTTP Handlers
 
+// HTTP Handlers
 
 func getAllShoppingListsHandler(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
@@ -288,6 +288,7 @@ func deleteItemFromShoppingListHandler(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(map[string]string{"message": "Item deleted from shopping list."})
 
 }
+
 // / database functions
 func GetDBConnection() (*sql.DB, error) {
 	db, err := sql.Open("sqlite3", "./ShoppingListApp.db")
@@ -496,7 +497,6 @@ func doesShoppingListExist(shoppingListId int) bool {
 
 	return true
 }
-
 
 func deleteItemFromShoppingList(shoppingListId int, itemId int) error {
 	// Get a database connection

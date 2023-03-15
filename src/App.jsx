@@ -4,11 +4,8 @@ import { AppBar, Toolbar, Typography } from '@mui/material';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import { AppContextProvider, AppContext } from './AppContext';
 import './App.css';
-import { LoadingScreen } from './components/LoadingScreen';
-import { ShoppingList } from './components/ShoppingList';
-
-// handle strict mode warnings
-// import { unstable_createMuiStrictModeTheme as createMuiTheme } from '@material-ui/core';
+import LoadingScreen from './components/LoadingScreen';
+import ShoppingList from './components/ShoppingList';
 
 function App() {
   const { loading } = useContext(AppContext);
@@ -18,7 +15,7 @@ function App() {
       <AppBar position="static" style={{ boxShadow: 'none' }}>
         <Toolbar>
           <Typography variant="h6">
-            Shopping List
+            SHOPPING LIST
           </Typography>
         </Toolbar>
       </AppBar>

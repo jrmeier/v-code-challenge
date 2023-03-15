@@ -1,6 +1,6 @@
 import React, {
   forwardRef, useEffect, useState, useContext,
-} from 'react'; // eslint-disable-line no-unused-vars
+} from 'react';
 import {
   Slide,
   FormControl,
@@ -40,7 +40,7 @@ const Transition = forwardRef((props, ref) => (
   />
 ));
 
-export function AddEditItemFormMu({
+export default function AddEditItemFormMu({
   showAddItemModal,
   setShowAddItemModal,
   editItemId,
@@ -72,9 +72,8 @@ export function AddEditItemFormMu({
   };
 
   useEffect(() => {
-    console.log('editItemId', editItemId);
     if (editItemId !== null) {
-      const itemToEdit = items[editItemId];
+      const itemToEdit = items.find((item) => item.id === editItemId);
       setItemName(itemToEdit.name);
       setItemDescription(itemToEdit.description);
       setItemQuantity(itemToEdit.quantity);

@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import {
   Box, Button, styled, Typography,
 } from '@mui/material';
-import { AddEditItemFormMu } from './AddEditItemDialog';
+import AddEditItemFormMu from './AddEditItemDialog';
 
 const StyledBox = styled(Box)({
   height: '240px',

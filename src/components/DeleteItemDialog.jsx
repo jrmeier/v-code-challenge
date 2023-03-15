@@ -1,4 +1,4 @@
-import { useContext } from 'react';
+import React, { useContext } from 'react';
 import {
   Button, Dialog, DialogTitle, DialogContent, DialogActions,
 } from '@mui/material';
@@ -57,7 +57,7 @@ const DeleteButton = styled(Button)({
   },
 });
 
-export function DeleteItemDialog({ isDialogOpen, setIsDialogOpen, deleteId }) {
+export default function DeleteItemDialog({ isDialogOpen, setIsDialogOpen, deleteId }) {
   const { deleteItem } = useContext(AppContext);
   const handleClose = () => {
     setIsDialogOpen(false);
