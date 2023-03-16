@@ -4,17 +4,18 @@ import {
 } from '@mui/material';
 import AddEditItemFormMu from './AddEditItemDialog';
 
-const StyledBox = styled(Box)({
+const StyledBox = styled(Box)(({ theme }) => ({
   height: '240px',
   borderRadius: '4px',
   width: '40%',
   margin: '0 auto',
   minHeight: '10vh',
-  border: '1px solid #c6c6c6',
+  border: '1px solid',
+  borderColor: theme.palette.border.main,
   marginTop: '5%',
   padding: '10px',
   position: 'relative',
-});
+}));
 
 const StyledHeader = styled(Typography)({
   fontSize: '18px',

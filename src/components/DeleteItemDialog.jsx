@@ -19,23 +19,23 @@ const StyledDialog = styled(forwardRef((props, ref) => (
   borderRadius: '4px',
 });
 
-const StyledDialogTitle = styled(DialogTitle)({
+const StyledDialogTitle = styled(DialogTitle)(({ theme }) => ({
   fontSize: '18px',
   lineHeight: '24px',
-  color: '#2A323C',
+  color: theme.palette.common.lightGreyBlue,
   paddingBotton: '10px',
-});
+}));
 
-const StyledDialogContent = styled(DialogContent)({
+const StyledDialogContent = styled(DialogContent)(({ theme }) => ({
   fontFamily: 'Nunito',
   fontStyle: 'normal',
   fontWeight: 400,
   fontSize: '14px',
   lineHeight: '20px',
   display: 'block',
-  color: '#5C6269',
+  color: theme.palette.common.lightGreyBlue,
   marginTop: '10px',
-});
+}));
 
 const DialogFooter = styled(DialogActions)({
   display: 'flex',
@@ -47,17 +47,17 @@ const CancelButton = styled(Button)({
   marginRight: '10px',
   textTransform: 'none',
 });
-const DeleteButton = styled(Button)({
-  backgroundColor: '#1871E8',
+const DeleteButton = styled(Button)(({ theme }) => ({
+  backgroundColor: theme.palette.button.main,
   color: 'white',
   textTransform: 'none',
 
   '&:hover': {
-    backgroundColor: '#1871E8',
+    backgroundColor: theme.palette.button.main,
     color: 'white',
     textTransform: 'none',
   },
-});
+}));
 
 export default function DeleteItemDialog({ isDialogOpen, setIsDialogOpen, deleteId }) {
   const { deleteItem } = useContext(AppContext);

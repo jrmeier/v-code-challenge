@@ -53,7 +53,6 @@ export default function AddEditItemFormMu({
   const [itemDescription, setItemDescription] = useState('');
   const [itemQuantity, setItemQuantity] = useState('');
   const [itemPurchased, setItemPurchased] = useState(false);
-  // const [toggleDescriptionError, setToggleDescriptionError] = useState(false);
 
   const handleSaveClick = () => {
     const newItem = {
