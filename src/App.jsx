@@ -30,6 +30,7 @@ const theme = createTheme({
     common: {
       lightBlue: '#4d81b7',
       lightGreyBlue: '#5C6269',
+      lightGrey: '#87898c',
     },
     button: {
       main: '#1871e8',

@@ -17,27 +17,28 @@ const StyledBox = styled(Box)(({ theme }) => ({
   position: 'relative',
 }));
 
-const StyledHeader = styled(Typography)({
+const StyledHeader = styled(Typography)(({ theme }) => ({
   fontSize: '18px',
   lineHeight: '24px',
-  color: '#87898c',
+  color: theme.palette.common.lightGrey,
   position: 'absolute',
   top: '50%',
   left: '50%',
   transform: 'translate(-50%, calc(-50% - 3rem))',
-});
+}));
 
-export const StyledButton = styled(Button)({
-  backgroundColor: '#1871e8',
+export const StyledButton = styled(Button)(({ theme }) => ({
+  backgroundColor: theme.palette.button.main,
   color: 'white',
-  border: '1px solid #87898c',
+  border: '1px solid',
+  borderColor: theme.palette.lightGrey,
   width: '30%',
   height: '2.5rem',
   position: 'absolute',
   top: '50%',
   left: '50%',
   transform: 'translate(-50%, -50%)',
-});
+}));
 
 export function EmptyShoppingList() {
   const [showAddItemModal, setShowAddItemModal] = useState(false);

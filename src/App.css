@@ -21,33 +21,7 @@
 .App-link {
   color: #61dafb;
 }
-/* 
-.shopping-list-container {
-  background-color: white;
-  margin-top: 10%;
-  font-family: "Nunito", sans-serif;
-  display: block;
-  width: 40%;
-  margin: auto;
-  min-height: 10vh;
-  border: 1px solid #c6c6c6;
-  border-radius: 5px;
-}
 
-.shopping-list-empty {
-  background-color: white;
-  color: #87898c;
-  font-family: "Nunito", sans-serif;
-  font-family: "Nunito", sans-serif;
-  display: block;
-  width: 40%;
-  margin: auto;
-  min-height: 10vh;
-  border: 1px solid #c6c6c6;
-  border-radius: 5px;
-  margin-top: 10%;
-}
-*/
 .action-button {
   display: flex;
   flex-direction: row;
