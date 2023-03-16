@@ -38,6 +38,10 @@ export const StyledButton = styled(Button)(({ theme }) => ({
   top: '50%',
   left: '50%',
   transform: 'translate(-50%, -50%)',
+  '&:hover': {
+    backgroundColor: 'inherit',
+    color: theme.palette.button.main,
+  },
 }));
 
 export function EmptyShoppingList() {

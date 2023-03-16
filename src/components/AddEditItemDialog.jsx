@@ -54,7 +54,14 @@ export default function AddEditItemFormMu({
   const [itemQuantity, setItemQuantity] = useState('');
   const [itemPurchased, setItemPurchased] = useState(false);
 
+  const [itemNameError, setItemNameError] = useState(false);
+
   const handleSaveClick = () => {
+    // do some light validation
+    if (!itemName || itemName.length === 0) {
+      setItemNameError(true);
+      return;
+    }
     const newItem = {
       name: itemName,
       description: itemDescription,
@@ -135,6 +142,8 @@ export default function AddEditItemFormMu({
             hiddenLabel
             placeholder="Item Name"
             focused={false}
+            label={itemNameError ? 'Item Name is required' : ''}
+            error={itemNameError}
           />
           <DescriptionContainer>
             <StyledTextInput

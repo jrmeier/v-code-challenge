@@ -69,8 +69,8 @@ export const StyledSaveEditButton = styled(Button)(({ theme }) => (
     textTransform: 'none',
 
     '&:hover': {
-      backgroundColor: theme.palette.button.main,
-      color: 'white',
+      backgroundColor: 'inherit',
+      color: theme.palette.button.main,
     },
   }
 ));
