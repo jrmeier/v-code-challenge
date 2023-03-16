@@ -30,8 +30,8 @@ npm start
 ### Requirements
 
 Its expected that you have the following installed on your machine:
-    Node.js (v16.16.0) (`nvm use` to use the correct version, `nvm install 16.16.0`)
-    Go (1.20) [Go instal](https://go.dev/doc/install)
+    - Node.js (v16.16.0) (`nvm use` to use the correct version, `nvm install 16.16.0`)
+    - Go (1.20) [Go install](https://go.dev/doc/install)
 
 ### Installing the application
 
