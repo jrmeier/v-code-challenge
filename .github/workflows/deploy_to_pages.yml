@@ -3,10 +3,10 @@ name: Deploy React Application
 
 # Controls when the action will run. 
 on:
-  # trigger the workflow on push and manuall
+  # trigger the workflow on push and manually
   push:
     branches: [ main ]
-  workflow_dispatch: true
+  workflow_dispatch: 
 
 jobs:
   build_test:
