@@ -7,7 +7,7 @@ import './App.css';
 import LoadingScreen from './components/LoadingScreen';
 import ShoppingList from './components/ShoppingList';
 
-function App() {
+export function AppNoProvider() {
   const { loading } = useContext(AppContext);
 
   return (
@@ -40,7 +40,7 @@ function AppWithProvider() {
   return (
     <AppContextProvider>
       <ThemeProvider theme={theme}>
-        <App />
+        <AppNoProvider />
       </ThemeProvider>
     </AppContextProvider>
   );
