@@ -3,9 +3,15 @@ export const updateLocalStorageWithItems = (items) => {
 };
 
 export const getItemsFromLocalStorage = () => {
-  const items = JSON.parse(localStorage.getItem('items'));
+  const foundItems = localStorage.getItem('items');
+  let returnItems;
+  if (!foundItems) {
+    returnItems = [];
+  } else {
+    returnItems = JSON.parse(localStorage.getItem('items'));
+  }
 
-  return items.map((x) => {
+  return returnItems.map((x) => {
     const newItem = { ...x };
     if (!newItem.id) {
       const newId = Math.floor(Math.random() * 1000000);

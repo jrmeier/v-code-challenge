@@ -44,7 +44,7 @@
     ]
   },
   "proxy": "http://localhost:5000/api",
-  "homepage": "jrmeier.github.io/v-code-challenge",
+  "homepage": "https://jrmeier.github.io/v-code-challenge",
   "devDependencies": {
     "@babel/core": "^7.21.3",
     "@babel/plugin-transform-modules-commonjs": "^7.21.2",

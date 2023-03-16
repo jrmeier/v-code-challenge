@@ -18,7 +18,7 @@ export function AppContextProvider({ children }) {
   const [items, setItems] = useState(defaultAppContext.items);
   const [loading, setLoading] = useState(false);
 
-  const shoppingListId = 1;
+  const shoppingListId = 1; // TODO: allows users to select which shopping list to view
 
   const addItem = async (newItem) => {
     // add the item to the shopping list
@@ -29,6 +29,8 @@ export function AppContextProvider({ children }) {
       const newItemWithLocalId = { ...newItem, id: Math.floor(Math.random() * 1000000) };
       newItems = [...items, newItemWithLocalId];
       updateLocalStorageWithItems(newItems);
+    } else {
+      newItems = [...items, newItemWithId];
     }
     setItems(newItems);
   };

@@ -32,7 +32,7 @@ const Transition = forwardRef((props, ref) => (
     direction="left"
     ref={ref}
     {...props} // eslint-disable-line react/jsx-props-no-spreading
-    style={{
+    style={{ // I did inine here because this is only used here and it's not a lot of code
       transformOrigin: 'right',
       marginLeft: '66.67%',
       padding: 0,
@@ -46,8 +46,8 @@ export default function AddEditItemFormMu({
   editItemId,
   setEditItemId,
 }) {
+  // Combined the Add and Edit forms into one component since its essentially the same form
   const { items, addItem, editItem } = useContext(AppContext);
-
   const [quantitySelectFocused, setQuantitySelectFocused] = useState(false);
   const [itemName, setItemName] = useState('');
   const [itemDescription, setItemDescription] = useState('');
@@ -91,7 +91,6 @@ export default function AddEditItemFormMu({
       setItemDescription('');
       setItemQuantity('');
       setItemPurchased(false);
-      // setEditItemId(null);
     };
   }, [editItemId, items, setEditItemId]);
 
@@ -153,6 +152,8 @@ export default function AddEditItemFormMu({
             <DescriptionCountDisplay>
               {' '}
               <span style={{ color: itemDescription.length >= 100 ? 'red' : 'inherit' }}>
+                {' '}
+                {/* I did inline again because of how little it is and how useful JSX is */}
                 {itemDescription.length}
               </span>
               /100
