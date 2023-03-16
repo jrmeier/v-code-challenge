@@ -38,7 +38,7 @@ Its expected that you have the following installed on your machine:
 First, clone this repository:
 
 ```shell
-git clone git@github.com:jrmeier/v-code-challenge.git
+git clone https://github.com/jrmeier/v-code-challenge.git
 ```
 
 Then navigate to the `v-code-challenge` directory and run `npm i` to install the frontend dependencies.

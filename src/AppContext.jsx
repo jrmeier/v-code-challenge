@@ -17,36 +17,44 @@ export const AppContext = createContext(defaultAppContext);
 export function AppContextProvider({ children }) {
   const [items, setItems] = useState(defaultAppContext.items);
   const [loading, setLoading] = useState(false);
+  const [isAppOffline, setIsAppOffline] = useState(false);
 
   const shoppingListId = 1; // TODO: allows users to select which shopping list to view
 
   const addItem = async (newItem) => {
     // add the item to the shopping list
-    const newItemWithId = await addShoppingItem(shoppingListId, newItem);
     let newItems = [];
-
-    if (newItemWithId.error) {
+    if (isAppOffline) {
       const newItemWithLocalId = { ...newItem, id: Math.floor(Math.random() * 1000000) };
       newItems = [...items, newItemWithLocalId];
       updateLocalStorageWithItems(newItems);
     } else {
+      const newItemWithId = await addShoppingItem(shoppingListId, newItem);
+      if (newItemWithId.error) {
+        console.error(newItemWithId.error); // eslint-disable-line no-console
+        return;
+      }
       newItems = [...items, newItemWithId];
     }
     setItems(newItems);
   };
 
   const editItem = (newItem) => {
-    const res = editShoppingItem(shoppingListId, newItem);
     const itemIndex = items.findIndex((item) => item.id === newItem.id);
     const newItems = [...items];
     newItems[itemIndex] = newItem;
 
-    if (!res.error) {
-      setItems(newItems);
-    } else {
-      // fallback to local storage
+    if (isAppOffline) {
       updateLocalStorageWithItems(newItems);
       setItems(newItems);
+    } else {
+      const res = editShoppingItem(shoppingListId, newItem);
+
+      if (!res.error) {
+        setItems(newItems);
+      } else {
+        console.error(res.error); // eslint-disable-line no-console
+      }
     }
   };
 
@@ -56,9 +64,12 @@ export function AppContextProvider({ children }) {
 
     if (!shoppingList.error) {
       setItems(shoppingList.shoppingListItems);
+      // assume app is operating without the Go backend
       setLoading(false);
     } else {
       // fallback to local storage
+      setIsAppOffline(true);
+      console.warn('App is offline. Using local storage for data.'); // eslint-disable-line no-console
       const itemsFromLocalStorage = getItemsFromLocalStorage();
       setItems(itemsFromLocalStorage);
       setLoading(false);
@@ -66,12 +77,13 @@ export function AppContextProvider({ children }) {
   };
 
   const deleteItem = async (itemId) => {
-    const res = await deleteShoppingItem(shoppingListId, itemId);
-
     const newItems = items.filter((item) => item.id !== itemId);
-    if (res.error) {
+
+    if (isAppOffline) {
       // fallback to local storage
       updateLocalStorageWithItems(newItems);
+    } else {
+      await deleteShoppingItem(shoppingListId, itemId);
     }
     setItems(newItems);
   };
