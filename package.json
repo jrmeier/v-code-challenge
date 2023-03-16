@@ -18,6 +18,8 @@
     "web-vitals": "^2.1.4"
   },
   "scripts": {
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d build",
     "start": "react-scripts start BASE_API_URL=http://localhost:5000/api",
     "build": "react-scripts build",
     "test": "vitest",
@@ -59,6 +61,7 @@
     "eslint-plugin-jsx-a11y": "^6.7.1",
     "eslint-plugin-react": "^7.32.2",
     "eslint-plugin-react-hooks": "^4.6.0",
+    "gh-pages": "^5.0.0",
     "jest": "^27.5.1",
     "jsdom": "^21.1.1",
     "jsdom-global": "^3.0.2",
