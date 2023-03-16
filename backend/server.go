@@ -69,9 +69,10 @@ func main() {
 	router.Use(corsHandler)
 	router.HandleFunc("/api", getAllShoppingListsHandler).Methods("GET")
 	router.HandleFunc("/api", createShoppingListHandler).Methods("POST")
-	router.HandleFunc("/api", deleteShoppingListHandler).Methods("DELETE")
 	router.HandleFunc("/api/{shoppingListId}", getShoppingListByIdHandler).Methods("GET")
 	router.HandleFunc("/api/{shoppingListId}", addItemToShoppingListHandler).Methods("PUT")
+	router.HandleFunc("/api/{shoppingListId}", deleteShoppingListHandler).Methods("DELETE")
+	router.HandleFunc("/api/{shoppingListId}/{itemId}", deleteItemFromShoppingListHandler).Methods("DELETE")
 	router.HandleFunc("/api/{shoppingListId}/{itemId}", updateItemInShoppingListHandler).Methods("POST")
 	router.HandleFunc("/api/{shoppingListId}/{itemId}", deleteItemFromShoppingListHandler).Methods("DELETE")
 
@@ -288,7 +289,6 @@ func deleteItemFromShoppingListHandler(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(map[string]string{"message": "Item deleted from shopping list."})
 
 }
-
 // / database functions
 func GetDBConnection() (*sql.DB, error) {
 	db, err := sql.Open("sqlite3", "./ShoppingListApp.db")

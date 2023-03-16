@@ -3,7 +3,6 @@ import {
 } from './httpHandlers';
 
 export const fetchShoppingList = async (shoppingListId) => {
-  console.log('fetchShoppingList', shoppingListId);
   const response = await get(`/${shoppingListId}`);
   return response;
 };
