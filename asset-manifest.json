@@ -1,13 +1,13 @@
 {
   "files": {
     "main.css": "/v-code-challenge/static/css/main.37fc5c52.css",
-    "main.js": "/v-code-challenge/static/js/main.387a5b17.js",
+    "main.js": "/v-code-challenge/static/js/main.bc0ef605.js",
     "index.html": "/v-code-challenge/index.html",
     "main.37fc5c52.css.map": "/v-code-challenge/static/css/main.37fc5c52.css.map",
-    "main.387a5b17.js.map": "/v-code-challenge/static/js/main.387a5b17.js.map"
+    "main.bc0ef605.js.map": "/v-code-challenge/static/js/main.bc0ef605.js.map"
   },
   "entrypoints": [
     "static/css/main.37fc5c52.css",
-    "static/js/main.387a5b17.js"
+    "static/js/main.bc0ef605.js"
   ]
 }
