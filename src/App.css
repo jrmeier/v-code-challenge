@@ -17,7 +17,7 @@
   align-items: center;
   font-family: "Dosis", sans-serif;
 }
-/* blue bar 2.5rem, header font 1rem, body font 1rem, button font 0.85rem */
+
 .App-link {
   color: #61dafb;
 }
@@ -26,13 +26,7 @@
   display: flex;
   flex-direction: row;
   justify-content: center;
-  /* padding: 8px 15px; */
-  /* gap: 10px; */
-
-  /* width: 151px; */
   height: 36px;
-  /* Blue 3 (Button Default) */
-
   background: #1871e8;
   border-radius: 4px;
 

@@ -304,9 +304,23 @@ func initializeDB() {
     create table shopping_lists (id integer not null primary key autoincrement, ownerId integer);
     create table shopping_list_items (id integer not null primary key autoincrement, name text, description text, quantity integer, purchased integer, shoppingListId integer);
     `
+	
 	_, err = db.Exec(sqlStmt)
 	if err != nil {
 		log.Printf("%q", err)
+	}
+
+	// check if the is a shopping list with the id of 1
+	// if not, create one
+	var id int
+	row := db.QueryRow("select id from shopping_lists where id = 1")
+	err = row.Scan(&id)
+	if err != nil {
+		// create a shopping list with id 1
+		_, err = db.Exec("insert into shopping_lists (id, ownerId) values (1, 1)")
+		if err != nil {
+			log.Printf("%q", err)
+		}
 	}
 }
 
@@ -351,6 +365,7 @@ func getShoppingListById(shoppingListId int) (shoppingList ShoppingList) {
 	} else {
 		shoppingListToReturn.ID = shoppingListId
 		shoppingListToReturn.OwnerID = ownerId
+		getShoppingListItemsById(shoppingListId)
 		shoppingListToReturn.ListItems, _ = getShoppingListItemsById(shoppingListId)
 	}
 
@@ -437,7 +452,7 @@ func getShoppingListItemsById(shoppingListId int) (ListItems, error) {
 	}
 	defer rows.Close()
 
-	var itemList []ListItem
+	var itemList []ListItem = []ListItem{}
 	for rows.Next() {
 		var id int
 		var name string
@@ -452,12 +467,11 @@ func getShoppingListItemsById(shoppingListId int) (ListItems, error) {
 
 		itemList = append(itemList, ListItem{ID: id, Name: name, Description: description, Quantity: quantity, Purchased: purchased})
 	}
-
+	
 	err = rows.Err()
 	if err != nil {
 		log.Fatal(err)
 	}
-
 	return itemList, nil
 }
 

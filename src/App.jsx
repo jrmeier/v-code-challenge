@@ -1,9 +1,11 @@
 import React, { useContext } from 'react';
 
-import { AppBar, Toolbar, Typography } from '@mui/material';
+import {
+  AppBar, Toolbar, Typography,
+} from '@mui/material';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import { AppContextProvider, AppContext } from './AppContext';
-import './App.css';
+// import './App.css'; /.
 import LoadingScreen from './components/LoadingScreen';
 import ShoppingList from './components/ShoppingList';
 

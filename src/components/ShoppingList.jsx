@@ -77,12 +77,12 @@ export default function ShoppingList() {
               primary={(
                 <StyledListItemPrimary>
                   {
-                                    item.purchased ? <StyledListItemPrimaryStrike component="span">{item.name}</StyledListItemPrimaryStrike> : item.name
+                                    item.purchased ? <StyledListItemPrimaryStrike component="span">{item.name}</StyledListItemPrimaryStrike> : <span>{item.name}</span>
                                 }
                 </StyledListItemPrimary>
                           )}
               secondary={
-                                item.purchased ? <StyledListItemSecondaryStrike component="span">{item.description}</StyledListItemSecondaryStrike> : item.description
+                                item.purchased ? <StyledListItemSecondaryStrike component="span">{item.description}</StyledListItemSecondaryStrike> : <span>{item.description}</span>
                             }
             />
             <ListItemSecondaryAction>

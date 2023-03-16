@@ -24,7 +24,6 @@ export const StyledDialogTitle = styled(DialogTitle)(({ theme }) => ({
   display: 'flex',
   justifyContent: 'space-between',
   alignItems: 'center',
-  // width: '100%',
   height: '63px',
   margin: 0,
   backgroundColor: '#FAFAFA',
@@ -68,6 +67,7 @@ export const StyledSaveEditButton = styled(Button)(({ theme }) => (
     borderColor: theme.palette.button.main,
     height: '2.5rem',
     textTransform: 'none',
+
     '&:hover': {
       backgroundColor: theme.palette.button.main,
       color: 'white',

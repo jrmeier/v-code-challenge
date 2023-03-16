@@ -35,12 +35,18 @@ export const StyledListItemPrimary = styled(Typography)({
 
 export const StyledListItemPrimaryStrike = styled(StyledListItemPrimary)({
   textDecoration: 'line-through',
+  fontSize: '16px',
+  fontWeight: '600',
+  lineHeight: '20px',
   padding: '0',
 });
 
 export const StyledListItemSecondaryStrike = styled(Typography)({
   textDecoration: 'line-through',
-  padding: '0',
+  fontSize: '16px',
+  padding: 0,
+  margin: 0,
+  lineHeight: '20px',
 });
 
 export const StyledAddItemButton = styled(Button)(({ theme }) => ({
@@ -55,6 +61,11 @@ export const StyledAddItemButton = styled(Button)(({ theme }) => ({
   fontSize: '14px',
   lineHeight: '20px',
   textAlign: 'center',
+
+  '&:hover': {
+    backgroundColor: '#1871e8',
+    color: 'white',
+  },
 }));
 
 export const StyledAddItemContainer = styled(Box)({
@@ -74,5 +85,10 @@ export const StyledListItem = styled(ListItem)({
   '&:hover': {
     background: '#D5DFE9',
   },
+  '&:focus': {
+    background: '#D5DFE9',
+    border: 'inherit',
+  },
+
   marginBottom: '10px',
 });
