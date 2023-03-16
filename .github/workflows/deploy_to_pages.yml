@@ -1,5 +1,5 @@
 
-name: Deploy React Application
+name: Deploy Shopping List
 
 # Controls when the action will run. 
 on:
@@ -31,4 +31,5 @@ jobs:
         uses: peaceiris/actions-gh-pages@v3
         with:
           deploy_key: ${{ secrets.ACTIONS_DEPLOY_KEY }}
-          publish_dir: ./build          
+          publish_dir: ./build
+      secrets: inherit
