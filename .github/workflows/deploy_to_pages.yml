@@ -3,9 +3,6 @@ name: Deploy Shopping List
 
 # Controls when the action will run. 
 on:
-  # trigger the workflow on push and manually
-  push:
-    branches: [ main ]
   workflow_dispatch: 
 
 jobs:
@@ -32,4 +29,4 @@ jobs:
         with:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           BRANCH: public # The branch the action should deploy to.
-          FOLDER: out # The folder the action should deploy.
+          FOLDER: build # The folder the action should deploy.
