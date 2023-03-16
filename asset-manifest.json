@@ -1,0 +1,13 @@
+{
+  "files": {
+    "main.css": "/jrmeier.github.io/v-code-challenge/static/css/main.37fc5c52.css",
+    "main.js": "/jrmeier.github.io/v-code-challenge/static/js/main.cbf3334a.js",
+    "index.html": "/jrmeier.github.io/v-code-challenge/index.html",
+    "main.37fc5c52.css.map": "/jrmeier.github.io/v-code-challenge/static/css/main.37fc5c52.css.map",
+    "main.cbf3334a.js.map": "/jrmeier.github.io/v-code-challenge/static/js/main.cbf3334a.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.37fc5c52.css",
+    "static/js/main.cbf3334a.js"
+  ]
+}
