@@ -6,7 +6,7 @@ import {
   Typography,
 } from '@mui/material';
 
-export const ListContainer = styled(Box)({
+export const ListContainer = styled(Box)(({ theme }) => ({
   display: 'flex',
   flexDirection: 'column',
   padding: '0',
@@ -14,13 +14,12 @@ export const ListContainer = styled(Box)({
   margin: '0 auto',
   marginTop: '20px',
   backgroundColor: 'white',
-  color: '#87898c',
+  color: theme.palette.common.lightGrey,
   fontFamily: 'Dosis',
-});
+}));
 
 export const StyledListTitle = styled(Typography)({
   fontSize: '18px',
-  fontFamily: 'Nunito 18px SemiBold',
   lineHeight: '24px',
   color: '#000000',
   textAlign: 'left',
@@ -44,18 +43,19 @@ export const StyledListItemSecondaryStrike = styled(Typography)({
   padding: '0',
 });
 
-export const StyledAddItemButton = styled(Button)({
+export const StyledAddItemButton = styled(Button)(({ theme }) => ({
   display: 'flex',
   justifyContent: 'center',
   backgroundColor: '#1871e8',
   color: 'white',
-  border: '1px solid #87898c',
+  border: '1px solid',
+  borderColor: theme.palette.common.lightGrey,
   fontStyle: 'normal',
   fontWeight: '600',
   fontSize: '14px',
   lineHeight: '20px',
   textAlign: 'center',
-});
+}));
 
 export const StyledAddItemContainer = styled(Box)({
   display: 'flex',
