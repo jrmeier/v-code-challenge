@@ -18,7 +18,7 @@
     "web-vitals": "^2.1.4"
   },
   "scripts": {
-    "start": "react-scripts start",
+    "start": "react-scripts start BASE_API_URL=http://localhost:5000/api",
     "build": "react-scripts build",
     "test": "vitest",
     "eject": "react-scripts eject"

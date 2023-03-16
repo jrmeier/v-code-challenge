@@ -1,25 +1,30 @@
 import axios from 'axios';
 
-const BASE_URL = 'http://localhost:5000/api';
+// const BASE_URL = 'http://localhost:5000/api';
+const BASE_URL = process.env.BASE_API_URL;
 
-export const get = async (url) => {
-  const apiResponse = await axios({
-    method: 'get',
-    url: `${BASE_URL}${url}`,
-  });
+export async function get(url) {
+  try {
+    const apiResponse = await axios({
+      method: 'get',
+      url: `${BASE_URL}${url}`,
+    });
 
-  if (apiResponse.status === 200 || apiResponse.status === 201) {
-    return apiResponse?.data;
+    if (apiResponse.status === 200 || apiResponse.status === 201) {
+      return apiResponse?.data;
+    }
+  } catch (error) {
+    return {
+      data: null,
+      error: {
+        statusTex: error.statusText,
+        statusCode: error.status,
+      },
+    };
   }
 
-  return {
-    data: null,
-    error: {
-      statusTex: apiResponse.statusText,
-      statusCode: apiResponse.status,
-    },
-  };
-};
+  return {};
+}
 
 export const post = async (url, data) => {
   const apiResponse = await axios({
@@ -41,38 +46,46 @@ export const post = async (url, data) => {
 };
 
 export const put = async (url, data) => {
-  const apiResponse = await axios({
-    method: 'put',
-    url,
-    data,
-  });
+  try {
+    const apiResponse = await axios({
+      method: 'put',
+      url,
+      data,
+    });
 
-  if (apiResponse.status === 200 || apiResponse === 201) {
-    return apiResponse?.data;
+    if (apiResponse.status === 200 || apiResponse === 201) {
+      return apiResponse?.data;
+    }
+  } catch (error) {
+    return {
+      error: {
+        statusTex: error.statusText,
+        statusCode: error.statusCode,
+      },
+    };
   }
 
-  return {
-    error: {
-      statusTex: apiResponse.statusText,
-      statusCode: apiResponse.statusCode,
-    },
-  };
+  return {};
 };
 
 export const apiDelete = async (url) => {
-  const apiResponse = await axios({
-    method: 'delete',
-    url,
-  });
+  try {
+    const apiResponse = await axios({
+      method: 'delete',
+      url,
+    });
 
-  if (apiResponse.status === 200 || apiResponse === 201) {
-    return apiResponse?.data;
+    if (apiResponse.status === 200 || apiResponse === 201) {
+      return apiResponse?.data;
+    }
+  } catch (error) {
+    return {
+      data: null,
+      error: {
+        statusTex: error.statusText,
+        statusCode: error.statusCode,
+      },
+    };
   }
-
-  return {
-    error: {
-      statusTex: apiResponse.statusText,
-      statusCode: apiResponse.statusCode,
-    },
-  };
+  return {};
 };

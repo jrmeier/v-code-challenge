@@ -4,6 +4,7 @@ import {
 
 export const fetchShoppingList = async (shoppingListId) => {
   const response = await get(`/${shoppingListId}`);
+  console.log('response', response);
   return response;
 };
 

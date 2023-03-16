@@ -9,7 +9,18 @@ export const updateLocalStorageWithItems = (items) => {
   localStorage.setItem('items', JSON.stringify(items));
 };
 
-export const getItemsFromLocalStorage = () => JSON.parse(localStorage.getItem('items'));
+export const getItemsFromLocalStorage = () => {
+  const items = JSON.parse(localStorage.getItem('items'));
+
+  return items.map((x) => {
+    const newItem = { ...x };
+    if (!newItem.id) {
+      const newId = Math.floor(Math.random() * 1000000);
+      newItem.id = newId;
+    }
+    return newItem;
+  });
+};
 
 const defaultAppContext = {
   items: [],
@@ -27,31 +38,58 @@ export function AppContextProvider({ children }) {
   const addItem = async (newItem) => {
     // add the item to the shopping list
     const newItemWithId = await addShoppingItem(shoppingListId, newItem);
-    const newItems = [...items, newItemWithId];
-    setItems(newItems);
+    let newItems = [];
 
-    // updateLocalStorageWithItems(newItems)
+    if (newItemWithId.error) {
+      const newItemWithLocalId = { ...newItem, id: Math.floor(Math.random() * 1000000) };
+      newItems = [...items, newItemWithLocalId];
+      updateLocalStorageWithItems(newItems);
+    }
+    setItems(newItems);
   };
 
   const editItem = (newItem) => {
-    editShoppingItem(shoppingListId, newItem);
-    // updateLocalStorageWithItems(newItems)
+    const res = editShoppingItem(shoppingListId, newItem);
     const itemIndex = items.findIndex((item) => item.id === newItem.id);
     const newItems = [...items];
     newItems[itemIndex] = newItem;
-    setItems(newItems);
+
+    if (!res.error) {
+      // updateLocalStorageWithItems(newItems)
+      setItems(newItems);
+    } else {
+      // fallback to local storage
+      updateLocalStorageWithItems(newItems);
+      setItems(newItems);
+    }
   };
 
   const loadItems = async () => {
     setLoading(true);
     const shoppingList = await fetchShoppingList(shoppingListId);
-    setItems(shoppingList.shoppingListItems);
-    setLoading(false);
+
+    if (!shoppingList.error) {
+      setItems(shoppingList.shoppingListItems);
+      setLoading(false);
+    } else {
+      // fallback to local storage
+      const itemsFromLocalStorage = getItemsFromLocalStorage();
+      setItems(itemsFromLocalStorage);
+      setLoading(false);
+    }
   };
 
-  const deleteItem = (itemId) => {
-    deleteShoppingItem(shoppingListId, itemId);
+  const deleteItem = async (itemId) => {
+    const res = await deleteShoppingItem(shoppingListId, itemId);
+
     const newItems = items.filter((item) => item.id !== itemId);
+
+    console.log('res: ', res);
+    if (res.error) {
+      // fallback to local storage
+      console.log('error deleting');
+      updateLocalStorageWithItems(newItems);
+    }
     setItems(newItems);
   };
 
