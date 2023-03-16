@@ -53,6 +53,7 @@ export default function AddEditItemFormMu({
   const [itemDescription, setItemDescription] = useState('');
   const [itemQuantity, setItemQuantity] = useState('');
   const [itemPurchased, setItemPurchased] = useState(false);
+  // const [toggleDescriptionError, setToggleDescriptionError] = useState(false);
 
   const handleSaveClick = () => {
     const newItem = {
@@ -69,6 +70,12 @@ export default function AddEditItemFormMu({
     }
 
     setShowAddItemModal(false);
+  };
+
+  const handleDescriptionChange = (e) => {
+    if (e.target.value.length <= 100) {
+      setItemDescription(e.target.value);
+    }
   };
 
   useEffect(() => {
@@ -135,7 +142,7 @@ export default function AddEditItemFormMu({
             <StyledTextInput
               type="text"
               value={itemDescription}
-              onChange={(e) => setItemDescription(e.target.value)}
+              onChange={handleDescriptionChange}
               fullWidth
               variant="outlined"
               hiddenLabel
@@ -146,7 +153,9 @@ export default function AddEditItemFormMu({
             />
             <DescriptionCountDisplay>
               {' '}
-              {itemDescription.length}
+              <span style={{ color: itemDescription.length >= 100 ? 'red' : 'inherit' }}>
+                {itemDescription.length}
+              </span>
               /100
               {' '}
             </DescriptionCountDisplay>

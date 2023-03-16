@@ -27,12 +27,20 @@ export function AppNoProvider() {
 
 const theme = createTheme({
   palette: {
-    primary: {
-      main: '#4d81b7',
+    common: {
+      lightBlue: '#4d81b7',
+      lightGreyBlue: '#5C6269',
+    },
+    button: {
+      main: '#1871e8',
+    },
+    border: {
+      main: '#c6c6c6',
+      secondary: '#1871e8',
     },
   },
   typography: {
-    fontFamily: 'Nunito',
+    fontFamily: 'Nunito, Dosis',
   },
 });
 

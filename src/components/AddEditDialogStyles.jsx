@@ -1,4 +1,4 @@
-import React from 'react'; // eslint-disable-line no-unused-vars
+// import React from 'react'; // eslint-disable-line no-unused-vars';
 import {
   Dialog,
   DialogTitle,
@@ -20,24 +20,22 @@ export const StyledAddEditDialog = styled(Dialog)({
   padding: 0,
 });
 
-export const StyledDialogTitle = styled(DialogTitle)(
-  {
-    display: 'flex',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    // width: '100%',
-    height: '63px',
-    margin: 0,
-    backgroundColor: '#FAFAFA',
-    borderBottom: '1px solid #c6c6c6',
-    padding: 0,
-    paddingRight: '20px',
-    paddingLeft: '30px',
-    color: '#5C6269',
-    fontFamily: 'Dosis',
-
-  },
-);
+export const StyledDialogTitle = styled(DialogTitle)(({ theme }) => ({
+  display: 'flex',
+  justifyContent: 'space-between',
+  alignItems: 'center',
+  // width: '100%',
+  height: '63px',
+  margin: 0,
+  backgroundColor: '#FAFAFA',
+  borderBottom: '1px solid',
+  borderColor: theme.palette.border.main,
+  padding: 0,
+  paddingRight: '20px',
+  paddingLeft: '30px',
+  color: theme.palette.common.lightGreyBlue,
+  fontFamily: theme.typography.secondary,
+}));
 
 export const StyledDialogContent = styled(DialogContent)(
   {
@@ -45,53 +43,49 @@ export const StyledDialogContent = styled(DialogContent)(
     flexDirection: 'column',
     height: '100%',
     padding: '30px',
-    fontFamily: 'Nunito',
     marginTop: '20px',
   },
 );
 
-export const StyledLastPageIcon = styled('div')(
-  {
-    fontSize: '2rem',
-    padding: '10px',
-    cursor: 'pointer',
-    color: '#5C6269',
-  },
-);
+export const StyledLastPageIcon = styled('div')(({ theme }) => ({
+  fontSize: '2rem',
+  padding: '10px',
+  cursor: 'pointer',
+  color: theme.palette.common.lightGreyBlue,
+}
+));
 
 export const StyledDialogEditText = styled(Typography)(
   {
-    fontFamily: 'Nunito',
     marginTop: '20px',
   },
 );
-export const StyledSaveEditButton = styled(Button)(
+export const StyledSaveEditButton = styled(Button)(({ theme }) => (
   {
-    backgroundColor: '#1871e8',
+    backgroundColor: theme.palette.button.main,
     color: 'white',
     border: '1px solid #87898c',
     height: '2.5rem',
-    fontFamily: 'Nunito',
     textTransform: 'none',
     '&:hover': {
-      backgroundColor: '#1871e8',
+      backgroundColor: theme.palette.button.main,
       color: 'white',
     },
-  },
-);
+  }
+));
 
-export const StyledCancelButton = styled(StyledSaveEditButton)(
+export const StyledCancelButton = styled(StyledSaveEditButton)(({ theme }) => (
   {
     backgroundColor: 'white',
-    color: '#5C6269',
+    color: theme.palette.common.lightGreyBlue,
     border: 'none',
     textTransform: 'none',
     '&:hover': {
       backgroundColor: 'white',
-      color: '#5C6269',
+      color: theme.palette.common.lightGreyBlue,
     },
-  },
-);
+  }
+));
 
 export const StyledDialogActions = styled(DialogActions)(
   {
@@ -103,30 +97,27 @@ export const StyledDialogActions = styled(DialogActions)(
   },
 );
 
-export const StyledQuantitySelect = styled(Select)(
+export const StyledQuantitySelect = styled(Select)(({ theme }) => (
   {
     width: '100%',
     boxShadow: 'none',
     outline: 'none',
-    // padding: '5px',
-    // borderRadius: '1px',
-    fontFamily: 'Nunito',
     fontSize: '1rem',
-    color: '#5C6269',
+    color: theme.palette.common.lightGreyBlue,
     '&:focus': {
       outline: 'none',
-      color: '#5C6269',
+      color: theme.palette.common.lightGreyBlue,
     },
-  },
-);
+  }
+));
 
-export const StyledQuantityMenuItem = styled(MenuItem)(
+export const StyledQuantityMenuItem = styled(MenuItem)(({ theme }) => (
   {
-    fontFamily: 'Nunito',
     fontSize: '1rem',
-    color: '#5C6269',
-  },
-);
+    fontFamily: theme.typography.primary,
+    color: theme.palette.common.lightGreyBlue,
+  }
+));
 
 export const StyledTextInput = styled(TextField)(
   {
@@ -138,13 +129,13 @@ export const DescriptionContainer = styled('div')({
   position: 'relative',
 });
 
-export const DescriptionCountDisplay = styled('div')({
+export const DescriptionCountDisplay = styled('div')(({
   position: 'absolute',
   bottom: '30px',
   right: '10px',
-  fontFamily: 'Nunito',
   fontSize: '12px',
   fontWeight: 400,
   lineHeight: '16px',
   letterSpacing: '0px',
-});
+  display: 'flex',
+}));
