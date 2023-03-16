@@ -4,6 +4,7 @@ import axios from 'axios';
 const BASE_URL = process.env.BASE_API_URL;
 
 export async function get(url) {
+  let returnObj = { msg: 'call failed' };
   try {
     const apiResponse = await axios({
       method: 'get',
@@ -11,19 +12,19 @@ export async function get(url) {
     });
 
     if (apiResponse.status === 200 || apiResponse.status === 201) {
-      return apiResponse?.data;
+      returnObj = apiResponse?.data;
     }
   } catch (error) {
-    return {
+    returnObj = {
       data: null,
       error: {
-        statusTex: error.statusText,
+        statusText: error.statusText,
         statusCode: error.status,
       },
     };
   }
 
-  return {};
+  return returnObj;
 }
 
 export const post = async (url, data) => {
@@ -38,8 +39,9 @@ export const post = async (url, data) => {
   }
 
   return {
+    data: null,
     error: {
-      statusTex: apiResponse.statusText,
+      statusText: apiResponse.statusText,
       statusCode: apiResponse.statusCode,
     },
   };
@@ -58,8 +60,9 @@ export const put = async (url, data) => {
     }
   } catch (error) {
     return {
+      data: null,
       error: {
-        statusTex: error.statusText,
+        statusText: error.statusText,
         statusCode: error.statusCode,
       },
     };

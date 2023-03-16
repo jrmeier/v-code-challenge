@@ -5,22 +5,7 @@ import {
   addShoppingItem, fetchShoppingList, editShoppingItem, deleteShoppingItem,
 } from './api';
 
-export const updateLocalStorageWithItems = (items) => {
-  localStorage.setItem('items', JSON.stringify(items));
-};
-
-export const getItemsFromLocalStorage = () => {
-  const items = JSON.parse(localStorage.getItem('items'));
-
-  return items.map((x) => {
-    const newItem = { ...x };
-    if (!newItem.id) {
-      const newId = Math.floor(Math.random() * 1000000);
-      newItem.id = newId;
-    }
-    return newItem;
-  });
-};
+import { updateLocalStorageWithItems, getItemsFromLocalStorage } from './api/localStorageHelpers';
 
 const defaultAppContext = {
   items: [],
@@ -55,7 +40,6 @@ export function AppContextProvider({ children }) {
     newItems[itemIndex] = newItem;
 
     if (!res.error) {
-      // updateLocalStorageWithItems(newItems)
       setItems(newItems);
     } else {
       // fallback to local storage
@@ -83,11 +67,8 @@ export function AppContextProvider({ children }) {
     const res = await deleteShoppingItem(shoppingListId, itemId);
 
     const newItems = items.filter((item) => item.id !== itemId);
-
-    console.log('res: ', res);
     if (res.error) {
       // fallback to local storage
-      console.log('error deleting');
       updateLocalStorageWithItems(newItems);
     }
     setItems(newItems);

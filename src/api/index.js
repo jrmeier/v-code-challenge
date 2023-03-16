@@ -4,14 +4,9 @@ import {
 
 export const fetchShoppingList = async (shoppingListId) => {
   const response = await get(`/${shoppingListId}`);
-  console.log('response', response);
   return response;
 };
 
-// "name":"red cheesy beefasdfasdfasdfasdf",
-// "description":"worlds best beef",
-// "quantity": 1,
-// "purchased":0
 export const editShoppingItem = async (shoppingListId, item) => {
   const payload = {
     shoppingListItem: {
@@ -22,9 +17,7 @@ export const editShoppingItem = async (shoppingListId, item) => {
     },
   };
 
-  const response = await post(`/${shoppingListId}/${item.id}`, payload);
-  return response;
-  // return payload
+  return post(`/${shoppingListId}/${item.id}`, payload);
 };
 
 export const addShoppingItem = async (shoppingListId, item) => {
@@ -36,8 +29,7 @@ export const addShoppingItem = async (shoppingListId, item) => {
     },
   };
 
-  const response = await put(`/${shoppingListId}`, payload);
-  return response;
+  return put(`/${shoppingListId}`, payload);
 };
 
 export const deleteShoppingItem = async (shoppingListId, itemId) => apiDelete(`${shoppingListId}/${itemId}`);

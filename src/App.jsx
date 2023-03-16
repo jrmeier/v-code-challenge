@@ -27,7 +27,7 @@ export function AppNoProvider() {
   );
 }
 
-const theme = createTheme({
+export const theme = createTheme({
   palette: {
     common: {
       lightBlue: '#4d81b7',
